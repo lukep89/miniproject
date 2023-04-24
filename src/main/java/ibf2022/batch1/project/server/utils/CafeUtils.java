@@ -16,7 +16,7 @@ public class CafeUtils {
 
         return ResponseEntity
                 .status(httpstatus)
-                .body(">>>> " + respMessage);
+                .body("{\"message\":\"" + respMessage + "\"}");
     }
 
     public static JsonObject jsonStringToJsonObj(String json) {

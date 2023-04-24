@@ -102,11 +102,11 @@ public class UserService {
 
     private User toNewUser(String json) {
 
-        JsonReader reader = Json.createReader(new StringReader(json));
-        JsonObject obj = reader.readObject();
+        JsonObject obj = CafeUtils.jsonStringToJsonObj(json);
 
         User user = new User();
-        // TDOO: use UUID for id? if yes need to update your db datatype
+        // TODO: use UUID for id? if yes need to update your db datatype
+
         user.setName(obj.getString("name"));
         user.setContactNumber(obj.getString("contactNumber"));
         user.setEmail(obj.getString("email"));
@@ -163,9 +163,9 @@ public class UserService {
     ResponseEntity<List<UserWrapper>> getAllUser() {
 
         try {
-            if(jwtFilter.isAdmin()){
+            if (jwtFilter.isAdmin()) {
 
-            }else{
+            } else {
                 return new ResponseEntity<>(new ArrayList<>(), HttpStatus.UNAUTHORIZED);
             }
             // List<UserWrapper> users = userRepo.getAllUser();
