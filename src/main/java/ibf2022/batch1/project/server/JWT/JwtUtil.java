@@ -51,7 +51,7 @@ public class JwtUtil {
         final String username = extractUsername(token);
 
         // if username is valid and token is expired
-        return (username.equals(userDetails.getUsername()) && isTokenExpired(token));
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
     // create and generate token from username (the username here is the email)
@@ -63,8 +63,7 @@ public class JwtUtil {
     }
 
     private String createToken(Map<String, Object> claims, String username) {
-
-        log.info(">>>> Inside createToken, claims & username: {} : {} ", claims, username);
+        log.info(">>>> Inside createToken - claims & username: {} : {} ", claims, username);
 
         return Jwts
                 .builder()
@@ -73,7 +72,6 @@ public class JwtUtil {
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // to expire in 10hrs
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-                // .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }
 
@@ -91,9 +89,6 @@ public class JwtUtil {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-
-        // using dependency jjwt 0.9.1
-        // Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
     }
 
     private Key getSignInKey() {

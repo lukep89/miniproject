@@ -17,6 +17,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
+// class to check if user has a valid jwt token
+
 @Slf4j
 @Component
 public class JwtFilter extends OncePerRequestFilter {
@@ -25,48 +27,94 @@ public class JwtFilter extends OncePerRequestFilter {
     private JwtUtil jwtUtil;
 
     @Autowired
-    private CustomerUserDetailsService cusUserDetailSvc;
+    private CustomerUserDetailsService customerUserDetailsSvc;
 
     Claims claims = null;
     private String userName = null;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
 
         // if httprequest matches these paths
         if (request.getServletPath()
                 .matches("/api/user/login|/api/user/signup|/api/user/forgotPassword")) {
+                // .matches("/api/user/login|/api/user/forgotPassword")) { // for testing
+
             // no token validation required
             filterChain.doFilter(request, response);
 
         } else {
-            String authorizationHeader = request.getHeader("Authorization");
-            log.info(">>>> Inside doFilterInternal, authorizationHeader: {}", authorizationHeader);
+            String authHeader = request.getHeader("Authorization");
+            log.info(">>>> Inside doFilterInternal - authHeader: {}", authHeader);
 
             String token = null;
 
-            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-                token = authorizationHeader.substring(7);
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                token = authHeader.substring(7);
                 userName = jwtUtil.extractUsername(token);
                 claims = jwtUtil.extractAllClaims(token);
+
+                log.info(">>>> Inside doFilterInternal - token, userName, claims : {} , {} , {}", token, userName,
+                        claims);
             }
 
             if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = cusUserDetailSvc.loadUserByUsername(userName);
+                UserDetails userDetails = customerUserDetailsSvc.loadUserByUsername(userName);
+                
+                log.info(">>>> Inside doFilterInternal - userDetails : {}", userDetails);
 
                 if (jwtUtil.validateToken(token, userDetails)) {
-                    UsernamePasswordAuthenticationToken usernamePasswordAuthToken = new UsernamePasswordAuthenticationToken(
+
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             userDetails, null, userDetails.getAuthorities());
 
-                    usernamePasswordAuthToken.setDetails(
+                    authToken.setDetails(
                             new WebAuthenticationDetailsSource().buildDetails(request));
 
-                    SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthToken);
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+
+                    log.info(">>>> Inside doFilterInternal - authToken : {}", authToken);
                 }
             }
             filterChain.doFilter(request, response);
         }
+
+        // // Amigo
+        // final String authHeader= request.getHeader("Authorization");
+        // final String jwt;
+        // final String userEmail;
+
+        // if(authHeader == null || !authHeader.startsWith("Bearer ")){
+        // filterChain.doFilter(request, response);
+        // return;
+        // }
+
+        // jwt = authHeader.substring(7);
+        // userEmail = jwtUtil.extractUsername(jwt);
+
+        // if(userEmail != null &&
+        // SecurityContextHolder.getContext().getAuthentication() == null){
+        // // UserDetails userDetails =
+        // this.userDetailsService.loadUserByUsername(userEmail); // amigo use this
+        // UserDetails userDetails =
+        // this.cusUserDetailSvc.loadUserByUsername(userEmail);
+
+        // if(jwtUtil.validateToken(jwt, userDetails)){
+        // UsernamePasswordAuthenticationToken authToken = new
+        // UsernamePasswordAuthenticationToken(
+        // userDetails, null, userDetails.getAuthorities());
+
+        // authToken.setDetails(
+        // new WebAuthenticationDetailsSource().buildDetails(request));
+
+        // SecurityContextHolder.getContext().setAuthentication(authToken);
+        // }
+        // }
+        // filterChain.doFilter(request, response);
+        // // Amigo
 
     }
 

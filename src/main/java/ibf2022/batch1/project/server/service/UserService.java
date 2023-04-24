@@ -1,6 +1,5 @@
 package ibf2022.batch1.project.server.service;
 
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,9 +18,7 @@ import ibf2022.batch1.project.server.model.User;
 import ibf2022.batch1.project.server.model.UserWrapper;
 import ibf2022.batch1.project.server.repository.UserRepository;
 import ibf2022.batch1.project.server.utils.CafeUtils;
-import jakarta.json.Json;
 import jakarta.json.JsonObject;
-import jakarta.json.JsonReader;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

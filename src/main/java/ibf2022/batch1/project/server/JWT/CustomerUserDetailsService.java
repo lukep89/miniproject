@@ -22,10 +22,10 @@ public class CustomerUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        log.info(">>>> Inside loadUserByUsername{} ", username);
+        log.info(">>>> Inside loadUserByUsername: {} ", username);
 
         userDetail = userRepo.findByEmail(username);
-        log.info(">>>> Inside loadUserByUsername, userDetail: {} ", userDetail);
+        log.info(">>>> Inside loadUserByUsername - userDetail: {} ", userDetail);
 
         if (userDetail != null) {
 
@@ -35,6 +35,7 @@ public class CustomerUserDetailsService implements UserDetailsService {
         } else {
             throw new UsernameNotFoundException("User not found.");
         }
+
     }
 
     public ibf2022.batch1.project.server.model.User getUserDetail() {

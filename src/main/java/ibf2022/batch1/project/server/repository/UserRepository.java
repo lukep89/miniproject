@@ -51,8 +51,7 @@ public class UserRepository {
                 ps.setString(6, newUser.getRole());
             }
         });
-
-        System.out.println(">>>>> inside findByEmail , isSaved? " + saved);
+        log.info(">>>>> inside findByEmail , isSaved? {} ", saved);
 
         return saved;
     }
