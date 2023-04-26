@@ -103,10 +103,10 @@
 
 		
 		<!-- for sending email (when user forgotten password, when new user status has been activated) -->
-		<!-- <dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
-    	</dependency> -->
+    	</dependency>
 
 
 		<!-- for string validation (MAYBE NOT NEEDED) -->

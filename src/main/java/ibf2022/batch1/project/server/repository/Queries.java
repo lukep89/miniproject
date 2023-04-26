@@ -18,4 +18,29 @@ public class Queries {
                         select * from user
                         where role = 'user';
                         """;
+
+        public static final String SQL_UPDATE_USER_STATUS_BY_EMAIL = """
+                        update user set status = ?
+                        where email = ?;
+                        """;
+
+        public static final String SQL_GET_USER_BY_ID = """
+                        select * from user
+                        where id = ?;
+                        """;
+
+        public static final String SQL_UPDATE_USER_STATUS_BY_ID = """
+                        update user set status = ?
+                        where id = ?;
+                        """;
+
+        public static final String SQL_GET_ALL_ADMIN = """
+                        select * from user
+                        where role = 'admin';
+                        """;
+
+        public static final String SQL_UPDATE_USER_PASSWORD = """
+                        update user set password = ?, date_updated = now()
+                        where email = ?;
+                        """;
 }

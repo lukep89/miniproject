@@ -41,7 +41,7 @@ public class JwtFilter extends OncePerRequestFilter {
         // if httprequest matches these paths
         if (request.getServletPath()
                 .matches("/api/user/login|/api/user/signup|/api/user/forgotPassword")) {
-                // .matches("/api/user/login|/api/user/forgotPassword")) { // for testing
+            // .matches("/api/user/login|/api/user/forgotPassword")) { // for testing
 
             // no token validation required
             filterChain.doFilter(request, response);
@@ -63,7 +63,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
             if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = customerUserDetailsSvc.loadUserByUsername(userName);
-                
+
                 log.info(">>>> Inside doFilterInternal - userDetails : {}", userDetails);
 
                 if (jwtUtil.validateToken(token, userDetails)) {
@@ -81,40 +81,6 @@ public class JwtFilter extends OncePerRequestFilter {
             }
             filterChain.doFilter(request, response);
         }
-
-        // // Amigo
-        // final String authHeader= request.getHeader("Authorization");
-        // final String jwt;
-        // final String userEmail;
-
-        // if(authHeader == null || !authHeader.startsWith("Bearer ")){
-        // filterChain.doFilter(request, response);
-        // return;
-        // }
-
-        // jwt = authHeader.substring(7);
-        // userEmail = jwtUtil.extractUsername(jwt);
-
-        // if(userEmail != null &&
-        // SecurityContextHolder.getContext().getAuthentication() == null){
-        // // UserDetails userDetails =
-        // this.userDetailsService.loadUserByUsername(userEmail); // amigo use this
-        // UserDetails userDetails =
-        // this.cusUserDetailSvc.loadUserByUsername(userEmail);
-
-        // if(jwtUtil.validateToken(jwt, userDetails)){
-        // UsernamePasswordAuthenticationToken authToken = new
-        // UsernamePasswordAuthenticationToken(
-        // userDetails, null, userDetails.getAuthorities());
-
-        // authToken.setDetails(
-        // new WebAuthenticationDetailsSource().buildDetails(request));
-
-        // SecurityContextHolder.getContext().setAuthentication(authToken);
-        // }
-        // }
-        // filterChain.doFilter(request, response);
-        // // Amigo
 
     }
 

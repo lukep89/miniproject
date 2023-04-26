@@ -3,6 +3,8 @@ package ibf2022.batch1.project.server.model;
 import java.io.Serializable;
 import java.io.StringReader;
 
+import org.springframework.jdbc.support.rowset.SqlRowSet;
+
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
@@ -60,7 +62,21 @@ public class User implements Serializable{
                 .build();
     }
 
+    public static User create(SqlRowSet rs) {
+		User user = new User();
+		user.setId(rs.getInt("id"));
+		user.setName(rs.getString("name"));
+		user.setContactNumber(rs.getString("contact_number"));
+		user.setEmail(rs.getString("email"));
+		user.setPassword(rs.getString("password"));
+		user.setStatus(rs.getString("status"));
+		user.setRole(rs.getString("role"));
+
+		return user;
+	}
+}
+
   
 
     
-}
+

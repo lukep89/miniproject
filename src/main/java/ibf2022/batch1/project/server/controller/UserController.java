@@ -56,19 +56,72 @@ public class UserController {
 
     }
 
-    @GetMapping(path = "/user/get")
+    @GetMapping(path = "/user/getAllUsers")
     public ResponseEntity<List<UserWrapper>> listOfUsers() {
 
         try {
-
-            // return userSvc.getAllUSer();
+            return userSvc.getAllUserByRole();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return new ResponseEntity<List<UserWrapper>>(
                 new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
 
+    }
+
+    @PostMapping(path = "/user/updateStatus")
+    public ResponseEntity<String> updateUserStatus(@RequestBody String payload) {
+        System.out.println(">>>> Inside updateUserStatus - payload: " + payload);
+
+        try {
+            return userSvc.updateUserStatus(payload);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(">>>> Something went wrong!");
+
+    }
+
+    @GetMapping(path = "/user/checkToken")
+    public ResponseEntity<String> checkToken() {
+
+        try {
+            return userSvc.checkToken();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(">>>> Something went wrong!");
+    }
+
+    @PostMapping(path = "/user/changePassword")
+    public ResponseEntity<String> changePassword(@RequestBody String payload) {
+
+        try {
+            return userSvc.changePassword(payload);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(">>>> Something went wrong!");
+    }
+
+    @PostMapping(path = "/user/forgotPassword")
+    public ResponseEntity<String> forgetPassword(@RequestBody String payload) {
+
+        try {
+            return userSvc.forgotPassword(payload);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(">>>> Something went wrong!");
     }
 }
