@@ -157,7 +157,6 @@ public class UserService {
         } catch (Exception e) {
             log.error("{}", e);
         }
-
         return new ResponseEntity<String>("{\"message\":\"" +
                 "Bad Credentials." + "\"}",
                 HttpStatus.BAD_REQUEST);

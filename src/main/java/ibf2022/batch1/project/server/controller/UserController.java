@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,14 +18,14 @@ import ibf2022.batch1.project.server.model.UserWrapper;
 import ibf2022.batch1.project.server.service.UserService;
 
 @RestController
-@RequestMapping(path = "/api")
+@RequestMapping(path = "/api/user")
 @CrossOrigin(origins = "*")
 public class UserController {
 
     @Autowired
     private UserService userSvc;
 
-    @PostMapping(path = "/user/signup")
+    @PostMapping(path = "/signup")
     public ResponseEntity<String> signUp(@RequestBody String payload) {
         // System.out.println(">>>> inside signup{} payload: " + payload);
 
@@ -40,7 +41,7 @@ public class UserController {
                 .body(">>>> Something went wrong!");
     }
 
-    @PostMapping(path = "/user/login")
+    @PostMapping(path = "/login")
     public ResponseEntity<String> login(@RequestBody String payload) {
         // System.out.println(">>>> inside login{} payload: " + payload);
 
@@ -56,7 +57,7 @@ public class UserController {
 
     }
 
-    @GetMapping(path = "/user/getAllUsers")
+    @GetMapping(path = "/getAllUsers")
     public ResponseEntity<List<UserWrapper>> listOfUsers() {
 
         try {
@@ -70,7 +71,8 @@ public class UserController {
 
     }
 
-    @PostMapping(path = "/user/updateStatus")
+    
+    @PutMapping(path = "/updateStatus")
     public ResponseEntity<String> updateUserStatus(@RequestBody String payload) {
         System.out.println(">>>> Inside updateUserStatus - payload: " + payload);
 
@@ -86,7 +88,7 @@ public class UserController {
 
     }
 
-    @GetMapping(path = "/user/checkToken")
+    @GetMapping(path = "/checkToken")
     public ResponseEntity<String> checkToken() {
 
         try {
@@ -99,7 +101,8 @@ public class UserController {
                 .body(">>>> Something went wrong!");
     }
 
-    @PostMapping(path = "/user/changePassword")
+    
+    @PutMapping(path = "/changePassword")
     public ResponseEntity<String> changePassword(@RequestBody String payload) {
 
         try {
@@ -112,7 +115,7 @@ public class UserController {
                 .body(">>>> Something went wrong!");
     }
 
-    @PostMapping(path = "/user/forgotPassword")
+    @PostMapping(path = "/forgotPassword")
     public ResponseEntity<String> forgetPassword(@RequestBody String payload) {
 
         try {

@@ -43,4 +43,27 @@ public class Queries {
                         update user set password = ?, date_updated = now()
                         where email = ?;
                         """;
+
+        public static final String SQL_GET_ALL_CATEGORY = """
+                        select * from category
+                        """;
+
+        public static final String SQL_INSERT_TO_CATEGORY_TABLE = """
+                        insert into category
+                                (name)
+                                value
+                                (?);
+                        """;
+
+        public static final String SQL_GET_CATEGORY_BY_ID = """
+                        select * from category
+                        where id = ?;
+                        """;
+
+        public static final String SQL_UPDATE_CATEGORY = """
+                        update category set name = ?
+                        where id = ?;
+                        """;
+
+        
 }
