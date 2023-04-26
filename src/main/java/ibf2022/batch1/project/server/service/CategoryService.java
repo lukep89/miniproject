@@ -32,18 +32,8 @@ public class CategoryService {
 
         JsonObject obj = CafeUtils.jsonStringToJsonObj(payload);
 
-        log.info(">>>> inside addNewCategory - obj: {}", obj);
-
         try {
             if (jwtFilter.isAdmin()) {
-
-                // if (validateCategoryJsonObj(obj, false)) {
-                // categoryRepo.saveCategory(getCategoryFromJsonObj(obj, false));
-
-                // return ResponseEntity
-                // .status(HttpStatus.OK)
-                // .body(">>>> Successfully added Category");
-                // }
 
                 categoryRepo.saveCategory(obj.getString("name"));
                 return ResponseEntity
@@ -65,11 +55,9 @@ public class CategoryService {
 
     }
 
-
     public ResponseEntity<List<Category>> getAllCategories(String filterValue) {
 
         try {
-
             if (Strings.hasText(filterValue) &&
                     filterValue.equalsIgnoreCase("true")) {
 
@@ -92,7 +80,6 @@ public class CategoryService {
         JsonObject obj = CafeUtils.jsonStringToJsonObj(payload);
 
         try {
-
             if (jwtFilter.isAdmin()) {
                 Optional<Category> opt = categoryRepo.findById(Integer.parseInt(obj.getString("id")));
 
@@ -116,12 +103,12 @@ public class CategoryService {
                         .body(">>>> Unauthorized access");
             }
 
-        } catch (
-
-        Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(">>>> Something went wrong!");
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(">>>> Something went wrong!");
     }
 
 }
