@@ -52,7 +52,7 @@ public class UserService {
         // log.info(">>>> inside signUp{} ", payload);
 
         try {
-            if (validateSignUp(payload)) {
+            if (validateSignUpPayload(payload)) {
                 JsonObject obj = CafeUtils.jsonStringToJsonObj(payload);
 
                 // check if user email exist in db. not regist user
@@ -73,7 +73,7 @@ public class UserService {
 
                 return ResponseEntity
                         .status(HttpStatus.OK)
-                        .body(">>>> Successfully Registered");
+                        .body(">>>> Successfully registered");
 
             } else {
                 return ResponseEntity
@@ -90,10 +90,10 @@ public class UserService {
 
     }
 
-    private boolean validateSignUp(String payload) {
+    private boolean validateSignUpPayload(String payload) {
 
         JsonObject obj = CafeUtils.jsonStringToJsonObj(payload);
-        // System.out.println(">>>> inside validateSignUp()" + obj);
+        // System.out.println(">>>> inside validateSignUpPayload()" + obj);
 
         // check if the Json has important keys for signup
         if (obj.containsKey("name") && obj.containsKey("contactNumber")
@@ -125,9 +125,8 @@ public class UserService {
     public ResponseEntity<String> login(String payload) {
         log.info(">>>> inside login {}", payload);
 
-        JsonObject obj = CafeUtils.jsonStringToJsonObj(payload);
-
         try {
+            JsonObject obj = CafeUtils.jsonStringToJsonObj(payload);
             // from the payload get the email and password for authentication
             Authentication auth = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -183,10 +182,10 @@ public class UserService {
 
     @Transactional
     public ResponseEntity<String> updateUserStatus(String payload) {
-        JsonObject obj = CafeUtils.jsonStringToJsonObj(payload);
 
         try {
             if (jwtFilter.isAdmin()) {
+                JsonObject obj = CafeUtils.jsonStringToJsonObj(payload);
 
                 // // IF USE FIND BY EMAIL
                 Optional<User> opt = userRepo.findByEmail(obj.getString("email"));
@@ -205,7 +204,7 @@ public class UserService {
 
                     return ResponseEntity
                             .status(HttpStatus.OK)
-                            .body(">>>> Successfully updated user status");
+                            .body(">>>> Updated user status successfully");
                 } else {
                     return ResponseEntity
                             .status(HttpStatus.OK)
@@ -232,7 +231,7 @@ public class UserService {
 
                 // return ResponseEntity
                 // .status(HttpStatus.OK)
-                // .body(">>>> Successfully updated user status");
+                // .body(">>>> Updated user status successfully");
                 // } else {
                 // return ResponseEntity
                 // .status(HttpStatus.OK)
@@ -280,9 +279,10 @@ public class UserService {
     }
 
     public ResponseEntity<String> changePassword(String payload) {
-        JsonObject obj = CafeUtils.jsonStringToJsonObj(payload);
 
         try {
+            JsonObject obj = CafeUtils.jsonStringToJsonObj(payload);
+
             Optional<User> opt = userRepo.findByEmail(jwtFilter.getCurrentUser());
             System.out.println(">>>> Inside chaangePassword - jetFiler: " + jwtFilter.getCurrentUser());
 
@@ -297,7 +297,7 @@ public class UserService {
 
                     return ResponseEntity
                             .status(HttpStatus.OK)
-                            .body(">>>> Successfully updated password");
+                            .body(">>>> Password updated successfully");
 
                 } else {
                     return ResponseEntity
@@ -320,10 +320,10 @@ public class UserService {
 
     public ResponseEntity<String> forgotPassword(String payload) {
 
-        JsonObject obj = CafeUtils.jsonStringToJsonObj(payload);
-        System.out.println(">>>> Inside forgotPassword - payload: " + payload);
-
         try {
+            JsonObject obj = CafeUtils.jsonStringToJsonObj(payload);
+            System.out.println(">>>> Inside forgotPassword - payload: " + payload);
+
             Optional<User> opt = userRepo.findByEmail(obj.getString("email"));
 
             if (opt.isPresent()) {

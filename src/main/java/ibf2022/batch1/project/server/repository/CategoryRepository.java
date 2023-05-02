@@ -1,7 +1,9 @@
 package ibf2022.batch1.project.server.repository;
 
 import static ibf2022.batch1.project.server.repository.Queries.SQL_GET_ALL_CATEGORY;
+import static ibf2022.batch1.project.server.repository.Queries.SQL_GET_ALL_CATEGORY_FOR_USER;
 import static ibf2022.batch1.project.server.repository.Queries.SQL_GET_CATEGORY_BY_ID;
+import static ibf2022.batch1.project.server.repository.Queries.SQL_INSERT_TO_CATEGORY_TABLE;
 import static ibf2022.batch1.project.server.repository.Queries.*;
 
 import java.sql.PreparedStatement;
@@ -17,7 +19,6 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 
 import ibf2022.batch1.project.server.model.Category;
-import jakarta.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -27,7 +28,7 @@ public class CategoryRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public List<Category> getCategories() {
+    public List<Category> getAllCategory() {
 
         List<Category> categories = jdbcTemplate.query(
                 SQL_GET_ALL_CATEGORY, BeanPropertyRowMapper.newInstance(Category.class));
@@ -38,8 +39,19 @@ public class CategoryRepository {
 
     }
 
-    public int saveCategory(String name) {
-        log.info(">>>>> Inside saveCategory: {} ", name);
+    public List<Category> getAllCategoryForUser() {
+
+        List<Category> categories = jdbcTemplate.query(
+                SQL_GET_ALL_CATEGORY_FOR_USER, BeanPropertyRowMapper.newInstance(Category.class));
+
+        log.info(">>>> Inside getCategories  size: {}", categories.size());
+
+        return categories;
+
+    }
+
+    public int saveCategory(Category cat) {
+        // log.info(">>>>> Inside saveCategory: {} ", cat);
 
         Integer saved = 0;
 
@@ -47,11 +59,9 @@ public class CategoryRepository {
 
             @Override
             public void setValues(PreparedStatement ps) throws SQLException {
-                ps.setString(1, name);
+                ps.setString(1, cat.getName());
             }
-
         });
-
         log.info(">>>>> inside save - isCategorySaved? {} ", saved);
         return saved;
     }
@@ -66,6 +76,14 @@ public class CategoryRepository {
 
         return Optional.of(Category.create(rs));
     }
+
+    // // TODO: frontend will list all the category when adding new category
+    // public Optional<Category> findByName(String name) {
+    // SqlRowSet rs = jdbcTemplate.queryForRowSet(SQL_GET_CATEGORY_BY_NAME, name);
+    // if (!rs.next())
+    // return Optional.empty();
+    // return Optional.of(Category.create(rs));
+    // }
 
     public int updateCategory(Category cat) {
         // log.info(">>>>> Inside categoryRepo - updateCategory: {} ", cat);
@@ -84,6 +102,10 @@ public class CategoryRepository {
         log.info(">>>>> inside update - isUpdated? {} ", updated);
 
         return updated;
+    }
+
+    public int count() {
+        return jdbcTemplate.queryForObject(SQL_COUNT_CATEGORY, Integer.class);
     }
 
 }

@@ -1,5 +1,6 @@
 package ibf2022.batch1.project.server.model;
 
+import java.io.Serializable;
 import java.io.StringReader;
 
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -16,7 +17,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Category {
+public class Category implements Serializable{
 
     private Integer id;
     private String name;
