@@ -127,17 +127,13 @@ public class BillService {
                 return new ResponseEntity<String>("{\"uuid\":\"" + fileName + "\"}", HttpStatus.OK);
 
             } else {
-                return ResponseEntity
-                        .status(HttpStatus.BAD_REQUEST)
-                        .body(">>>> Required data not found");
+                return CafeUtils.getRespEntity(HttpStatus.BAD_REQUEST, "Required data not found");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(">>>> Something went wrong!");
+        return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
     }
 
     private boolean validateBillPayload(String payload) {
@@ -310,22 +306,16 @@ public class BillService {
             if (opt.isPresent()) {
                 billRepo.deleteBillById(id);
 
-                return ResponseEntity
-                        .status(HttpStatus.OK)
-                        .body(">>>> Deleted bill successfully");
+                return CafeUtils.getRespEntity(HttpStatus.OK, "Deleted bill successfully");
 
             } else {
-                return ResponseEntity
-                        .status(HttpStatus.OK)
-                        .body(">>>> Bill id does not exist");
+                return CafeUtils.getRespEntity(HttpStatus.OK, "Bill id does not exist");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(">>>> Something went wrong!");
+        return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
     }
 
 }

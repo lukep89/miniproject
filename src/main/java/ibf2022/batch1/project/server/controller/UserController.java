@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ibf2022.batch1.project.server.model.UserWrapper;
 import ibf2022.batch1.project.server.service.UserService;
+import ibf2022.batch1.project.server.utils.CafeUtils;
 
 @RestController
 @RequestMapping(path = "/api/user")
@@ -30,15 +31,12 @@ public class UserController {
         // System.out.println(">>>> inside signup{} payload: " + payload);
 
         try {
-            return userSvc.signUp(payload);
+            return userSvc.signup(payload);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(">>>> Something went wrong!");
+        return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
     }
 
     @PostMapping(path = "/login")
@@ -50,11 +48,7 @@ public class UserController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(">>>> Something went wrong!");
-
+        return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
     }
 
     @GetMapping(path = "/getAllUsers")
@@ -71,7 +65,6 @@ public class UserController {
 
     }
 
-    
     @PutMapping(path = "/updateStatus")
     public ResponseEntity<String> updateUserStatus(@RequestBody String payload) {
         System.out.println(">>>> Inside updateUserStatus - payload: " + payload);
@@ -82,10 +75,7 @@ public class UserController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(">>>> Something went wrong!");
-
+        return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
     }
 
     @GetMapping(path = "/checkToken")
@@ -96,9 +86,7 @@ public class UserController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(">>>> Something went wrong!");
+        return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
     }
 
     
@@ -110,9 +98,7 @@ public class UserController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(">>>> Something went wrong!");
+        return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
     }
 
     @PostMapping(path = "/forgotPassword")
@@ -123,8 +109,6 @@ public class UserController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(">>>> Something went wrong!");
+        return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
     }
 }

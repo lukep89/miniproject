@@ -11,9 +11,11 @@ import org.springframework.stereotype.Service;
 import ibf2022.batch1.project.server.repository.BillRepository;
 import ibf2022.batch1.project.server.repository.CategoryRepository;
 import ibf2022.batch1.project.server.repository.ProductRepository;
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
-
+@Slf4j
 @Service
 public class DashboardService {
 
@@ -27,6 +29,7 @@ public class DashboardService {
     BillRepository billRepo;
 
     public ResponseEntity<Map<String, Object>> getCount() {
+        log.info("Inside getCount");
 
         Map<String, Object> map = new HashMap<>();
 
@@ -37,4 +40,5 @@ public class DashboardService {
         return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
     }
 
+    
 }

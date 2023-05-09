@@ -45,28 +45,20 @@ public class CategoryService {
                 if (validateCategoryPayload(payload, false)) {
                     categoryRepo.saveCategory(getCategoryFromPayload(payload, false));
 
-                    return ResponseEntity
-                            .status(HttpStatus.OK)
-                            .body(">>>> Added category successfully");
+                    return CafeUtils.getRespEntity(HttpStatus.OK, "Added category successfully");
 
                 } else {
-                    return ResponseEntity
-                            .status(HttpStatus.BAD_REQUEST)
-                            .body(">>>> Invalid data");
+                    return CafeUtils.getRespEntity(HttpStatus.BAD_REQUEST, "Invalid data");
                 }
 
             } else {
-                return ResponseEntity
-                        .status(HttpStatus.UNAUTHORIZED)
-                        .body(">>>> Unauthorized access");
+                return CafeUtils.getRespEntity(HttpStatus.UNAUTHORIZED, "Unauthorized access");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(">>>> Something went wrong!");
+        return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
 
     }
 
@@ -91,7 +83,7 @@ public class CategoryService {
         Category cat = new Category();
 
         if (isUpdate) {
-            cat.setId(Integer.parseInt(obj.getString("id")));
+            cat.setId(obj.getInt("id"));
         }
         cat.setName(obj.getString("name"));
 
@@ -128,38 +120,28 @@ public class CategoryService {
 
                 if (validateCategoryPayload(payload, true)) {
                     JsonObject obj = CafeUtils.jsonStringToJsonObj(payload);
-                    Optional<Category> opt = categoryRepo.findById(Integer.parseInt(obj.getString("id")));
+                    Optional<Category> opt = categoryRepo.findById(obj.getInt("id"));
 
                     if (opt.isPresent()) {
                         categoryRepo.updateCategory(getCategoryFromPayload(payload, true));
 
-                        return ResponseEntity
-                                .status(HttpStatus.OK)
-                                .body(">>>> Updated category successfully");
+                        return CafeUtils.getRespEntity(HttpStatus.OK, "Updated category successfully");
 
                     } else {
-                        return ResponseEntity
-                                .status(HttpStatus.OK)
-                                .body(">>>> Category id does not exist");
+                        return CafeUtils.getRespEntity(HttpStatus.OK, "Category id does not exist");
                     }
                 } else {
-                    return ResponseEntity
-                            .status(HttpStatus.BAD_REQUEST)
-                            .body(">>>> Invalid data");
+                    return CafeUtils.getRespEntity(HttpStatus.BAD_REQUEST, "Invalid data");
                 }
 
             } else {
-                return ResponseEntity
-                        .status(HttpStatus.UNAUTHORIZED)
-                        .body(">>>> Unauthorized access");
+                return CafeUtils.getRespEntity(HttpStatus.UNAUTHORIZED, "Unauthorized access");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(">>>> Something went wrong!");
+        return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
     }
 
 }

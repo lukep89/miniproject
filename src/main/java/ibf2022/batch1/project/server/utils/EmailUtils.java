@@ -56,6 +56,7 @@ public class EmailUtils {
         helper.setTo(to);
         helper.setSubject(subject);
 
+        // TODO: note to change the anchor link for forgotPassword email
         String htmlMsgContent = "<p><b>Your Login details for Cafe Management System</b><br><b>Email: </b> " + to
                 + " <br><b>Password: </b> " + password
                 + "<br><a href=\"http://localhost:4200/\">Click here to login</a></p>";

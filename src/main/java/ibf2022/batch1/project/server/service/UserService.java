@@ -48,7 +48,7 @@ public class UserService {
     @Autowired
     EmailUtils emailUtils;
 
-    public ResponseEntity<String> signUp(String payload) {
+    public ResponseEntity<String> signup(String payload) {
         // log.info(">>>> inside signUp{} ", payload);
 
         try {
@@ -62,38 +62,29 @@ public class UserService {
                 Optional<User> opt = userRepo.findByEmail(email);
 
                 if (opt.isPresent()) {
-                    return ResponseEntity
-                            .status(HttpStatus.BAD_REQUEST)
-                            .body(">>>> Email already exist");
+                    return CafeUtils.getRespEntity(HttpStatus.BAD_REQUEST, "Email already exist");
                 }
 
                 User newUser = toNewUser(payload);
 
                 userRepo.saveUser(newUser);
 
-                return ResponseEntity
-                        .status(HttpStatus.OK)
-                        .body(">>>> Successfully registered");
+                return CafeUtils.getRespEntity(HttpStatus.OK, "Successfully registered");
 
             } else {
-                return ResponseEntity
-                        .status(HttpStatus.BAD_REQUEST)
-                        .body(">>>> Invalid data. Missing fields.");
+                return CafeUtils.getRespEntity(HttpStatus.BAD_REQUEST, "Invalid data. Missing fields");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(">>>> Something went wrong");
         }
+        return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
 
     }
 
     private boolean validateSignUpPayload(String payload) {
 
         JsonObject obj = CafeUtils.jsonStringToJsonObj(payload);
-        // System.out.println(">>>> inside validateSignUpPayload()" + obj);
 
         // check if the Json has important keys for signup
         if (obj.containsKey("name") && obj.containsKey("contactNumber")
@@ -198,17 +189,13 @@ public class UserService {
                             .map(u -> u.getEmail())
                             .collect(Collectors.toList());
 
-                    System.out.println(">>>> allAdminEmail: " + allAdminEmail.size());
+                    log.info(">>>> allAdminEmail: {}", allAdminEmail.size());
 
                     sendEmailToAllAdmin(status, email, allAdminEmail);
 
-                    return ResponseEntity
-                            .status(HttpStatus.OK)
-                            .body(">>>> Updated user status successfully");
+                    return CafeUtils.getRespEntity(HttpStatus.OK, "Updated user status successfully");
                 } else {
-                    return ResponseEntity
-                            .status(HttpStatus.OK)
-                            .body(">>>> User email doesn't exist");
+                    return CafeUtils.getRespEntity(HttpStatus.OK, "User email doesn't exist");
                 }
 
                 // // TODO: DECIDE TO USE UPDATEUSERSTATUSBYEMAIL OR BYID
@@ -239,17 +226,13 @@ public class UserService {
                 // }
 
             } else {
-                return ResponseEntity
-                        .status(HttpStatus.UNAUTHORIZED)
-                        .body(">>>> Unauthorized access");
+                return CafeUtils.getRespEntity(HttpStatus.UNAUTHORIZED, "Unauthorized access");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(">>>> Something went wrong");
+        return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
     }
 
     private void sendEmailToAllAdmin(String status, String userEmail, List<String> allAdminEmail) {
@@ -273,9 +256,7 @@ public class UserService {
     // method to allow user to route relevant user-only page.
     public ResponseEntity<String> checkToken() {
 
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(">>>> Token valid");
+        return CafeUtils.getRespEntity(HttpStatus.OK, "Token valid");
     }
 
     public ResponseEntity<String> changePassword(String payload) {
@@ -284,7 +265,7 @@ public class UserService {
             JsonObject obj = CafeUtils.jsonStringToJsonObj(payload);
 
             Optional<User> opt = userRepo.findByEmail(jwtFilter.getCurrentUser());
-            System.out.println(">>>> Inside chaangePassword - jetFiler: " + jwtFilter.getCurrentUser());
+            log.info(">>>> Inside chaangePassword - jetFiler: {}", jwtFilter.getCurrentUser());
 
             if (opt.isPresent()) {
 
@@ -295,62 +276,46 @@ public class UserService {
                     user.setPassword(obj.getString("newPassword"));
                     userRepo.updateUserPassword(user);
 
-                    return ResponseEntity
-                            .status(HttpStatus.OK)
-                            .body(">>>> Password updated successfully");
+                    return CafeUtils.getRespEntity(HttpStatus.OK, "Updated password successfully");
 
                 } else {
-                    return ResponseEntity
-                            .status(HttpStatus.BAD_REQUEST)
-                            .body(">>>> Incorrect old password");
+                    return CafeUtils.getRespEntity(HttpStatus.BAD_REQUEST, "Incorrect old password");
                 }
             } else {
-                return ResponseEntity
-                        .status(HttpStatus.BAD_REQUEST)
-                        .body(">>>> User not found");
+                return CafeUtils.getRespEntity(HttpStatus.BAD_REQUEST, "User not found");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(">>>> Something went wrong");
+        return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
     }
 
     public ResponseEntity<String> forgotPassword(String payload) {
 
         try {
             JsonObject obj = CafeUtils.jsonStringToJsonObj(payload);
-            System.out.println(">>>> Inside forgotPassword - payload: " + payload);
 
             Optional<User> opt = userRepo.findByEmail(obj.getString("email"));
-
             if (opt.isPresent()) {
                 User user = opt.get();
-                System.out.println(">>>> Inside forgotPassword - user: " + user);
+                log.info(">>>> Inside forgotPassword - user: {}", user);
 
                 if (Strings.hasText(obj.getString("email"))) {
                     emailUtils.forgotPasswordMail(user.getEmail(), "Credentials by Cafe Management System",
                             user.getPassword());
                 }
 
-                return ResponseEntity
-                        .status(HttpStatus.OK)
-                        .body(">>>> Check your email for Credentials");
+                return CafeUtils.getRespEntity(HttpStatus.OK, "Check your email for credentials");
 
             } else {
-                return ResponseEntity
-                        .status(HttpStatus.OK)
-                        .body(">>>> Check your email for Credentials...");
+                return CafeUtils.getRespEntity(HttpStatus.OK, "Check your email for credentials...");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(">>>> Something went wrong");
+        return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
     }
 
 }

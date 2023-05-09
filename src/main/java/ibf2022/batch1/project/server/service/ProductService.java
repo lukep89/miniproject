@@ -38,27 +38,19 @@ public class ProductService {
                 if (validateProductPayload(payload, false)) {
                     productRepo.saveNewProduct(getProductFromPayload(payload, false));
 
-                    return ResponseEntity
-                            .status(HttpStatus.OK)
-                            .body(">>>> Added product successfully");
+                    return CafeUtils.getRespEntity(HttpStatus.OK, "Added product successfully");
                 } else {
-                    return ResponseEntity
-                            .status(HttpStatus.BAD_REQUEST)
-                            .body(">>>> Invalid data");
+                    return CafeUtils.getRespEntity(HttpStatus.BAD_REQUEST, "Invalid data");
                 }
 
             } else {
-                return ResponseEntity
-                        .status(HttpStatus.UNAUTHORIZED)
-                        .body(">>>> Unauthorized access");
+                return CafeUtils.getRespEntity(HttpStatus.UNAUTHORIZED, "Unauthorized access");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(">>>> Something went wrong!");
+        return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
     }
 
     private boolean validateProductPayload(String payload, boolean validiateId) {
@@ -128,33 +120,23 @@ public class ProductService {
 
                         productRepo.updateProduct(product);
 
-                        return ResponseEntity
-                                .status(HttpStatus.OK)
-                                .body(">>>> Updated product successfully");
+                        return CafeUtils.getRespEntity(HttpStatus.OK, "Updated product successfully");
 
                     } else {
-                        return ResponseEntity
-                                .status(HttpStatus.OK)
-                                .body(">>>> Product id does not exist");
+                        return CafeUtils.getRespEntity(HttpStatus.OK, "Product id does not exist");
                     }
                 } else {
-                    return ResponseEntity
-                            .status(HttpStatus.BAD_REQUEST)
-                            .body(">>>> Invalid data");
+                    return CafeUtils.getRespEntity(HttpStatus.BAD_REQUEST, "Invalid data");
                 }
 
             } else {
-                return ResponseEntity
-                        .status(HttpStatus.UNAUTHORIZED)
-                        .body(">>>> Unauthorized access");
+                return CafeUtils.getRespEntity(HttpStatus.UNAUTHORIZED, "Unauthorized access");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(">>>> Something went wrong!");
+        return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
     }
 
     public ResponseEntity<String> deleteProduct(Integer id) {
@@ -167,28 +149,20 @@ public class ProductService {
 
                     productRepo.deleteProductById(id);
 
-                    return ResponseEntity
-                            .status(HttpStatus.OK)
-                            .body(">>>> Deleted product successfully");
+                    return CafeUtils.getRespEntity(HttpStatus.OK, "Deleted product successfully");
 
                 } else {
-                    return ResponseEntity
-                            .status(HttpStatus.OK)
-                            .body(">>>> Product id does not exist");
+                    return CafeUtils.getRespEntity(HttpStatus.OK, "Product id does not exist");
                 }
 
             } else {
-                return ResponseEntity
-                        .status(HttpStatus.UNAUTHORIZED)
-                        .body(">>>> Unauthorized access");
+                return CafeUtils.getRespEntity(HttpStatus.UNAUTHORIZED, "Unauthorized access");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(">>>> Something went wrong!");
+        return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
     }
 
     public ResponseEntity<String> updateProductStatus(String payload) {
@@ -205,27 +179,19 @@ public class ProductService {
 
                     productRepo.updateProductStatus(status, id);
 
-                    return ResponseEntity
-                            .status(HttpStatus.OK)
-                            .body(">>>> Updated product status successfully");
+                    return CafeUtils.getRespEntity(HttpStatus.OK, "Updated product status successfully");
 
                 } else {
-                    return ResponseEntity
-                            .status(HttpStatus.OK)
-                            .body(">>>> Product id does not exist");
+                    return CafeUtils.getRespEntity(HttpStatus.OK, "Product id does not exist");
                 }
             } else {
-                return ResponseEntity
-                        .status(HttpStatus.UNAUTHORIZED)
-                        .body(">>>> Unauthorized access");
+                return CafeUtils.getRespEntity(HttpStatus.UNAUTHORIZED, "Unauthorized access");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(">>>> Something went wrong!");
+        return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
     }
 
     public ResponseEntity<List<ProductByCategoryWrapper>> getProductByCategory(Integer id) {
@@ -245,8 +211,8 @@ public class ProductService {
 
             Optional<ProductByIdWrapper> opt = productRepo.getProductById(id);
             if (opt.isPresent()) {
-
                 return new ResponseEntity<>(opt.get(), HttpStatus.OK);
+                
             } else {
                 new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }

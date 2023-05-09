@@ -20,6 +20,7 @@ import ibf2022.batch1.project.server.model.ProductByCategoryWrapper;
 import ibf2022.batch1.project.server.model.ProductByIdWrapper;
 import ibf2022.batch1.project.server.model.ProductWrapper;
 import ibf2022.batch1.project.server.service.ProductService;
+import ibf2022.batch1.project.server.utils.CafeUtils;
 
 @RestController
 @RequestMapping(path = "/api/product")
@@ -38,9 +39,7 @@ public class ProductController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(">>>> Something went wrong!");
+        return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
     }
 
     @GetMapping(path = "/get")
@@ -64,9 +63,7 @@ public class ProductController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(">>>> Something went wrong!");
+        return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
     }
 
     @DeleteMapping(path = "/delete/{id}")
@@ -78,9 +75,7 @@ public class ProductController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(">>>> Something went wrong!");
+        return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
     }
 
     @PostMapping(path = "/updateStatus")
@@ -92,9 +87,7 @@ public class ProductController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(">>>> Something went wrong!");
+        return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
     }
 
     @GetMapping(path = "/getByCategory/{id}")

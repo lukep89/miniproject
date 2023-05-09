@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ibf2022.batch1.project.server.model.Category;
 import ibf2022.batch1.project.server.service.CategoryService;
+import ibf2022.batch1.project.server.utils.CafeUtils;
 
 @RestController
 @RequestMapping(path = "/api/category")
@@ -30,15 +31,12 @@ public class CategoryController {
     ResponseEntity<String> addNewCategory(@RequestBody String payload) {
 
         try {
-
             return categorySvc.addNewCategory(payload);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(">>>> Something went wrong!");
+        return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
     }
 
     @GetMapping(path = "/get")
@@ -63,10 +61,7 @@ public class CategoryController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(">>>> Something went wrong!");
-
+        return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
     }
 
 }

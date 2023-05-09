@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ibf2022.batch1.project.server.model.Bill;
 import ibf2022.batch1.project.server.service.BillService;
+import ibf2022.batch1.project.server.utils.CafeUtils;
 
 @RestController
 @RequestMapping(path = "/api/bill")
@@ -34,9 +35,7 @@ public class BillController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(">>>> Something went wrong!");
+        return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
     }
 
     @GetMapping(path = "/getBills")
@@ -72,8 +71,6 @@ public class BillController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(">>>> Something went wrong!");
+        return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
     }
 }
