@@ -34,9 +34,6 @@ public class BillRepository {
 
         Integer saved = 0;
 
-        // TODO: want to change the created_by to user_id? then need to update bill
-        // table
-        // TODO: input another field crated_date? and in pdf copy print the date?
         saved = jdbcTemplate.update(SQL_INSERT_TO_BILL_TABLE, new PreparedStatementSetter() {
 
             @Override
@@ -44,7 +41,7 @@ public class BillRepository {
                 ps.setString(1, bill.getUuid());
                 ps.setString(2, bill.getName());
                 ps.setString(3, bill.getEmail());
-                ps.setString(4, bill.getContactNumber());
+                ps.setString(4, bill.getContactNumber( ));
                 ps.setString(5, bill.getPaymentMethod());
                 ps.setFloat(6, bill.getTotalAmount());
                 ps.setString(7, bill.getProductDetails());

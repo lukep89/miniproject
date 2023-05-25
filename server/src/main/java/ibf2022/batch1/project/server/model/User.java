@@ -27,6 +27,8 @@ public class User implements Serializable{
     private String status;
     private String role;
 
+    private String resetPasswordToken;
+
     // For setting date incase if needed
     // @DateTimeFormat(pattern = "yyyy-MM-dd")
     // private LocalDate confirmationDate; // to auto generated when save to db
@@ -74,6 +76,16 @@ public class User implements Serializable{
 
 		return user;
 	}
+
+    public static User createForResetPassword(SqlRowSet rs) {
+        User user = new User();
+
+        user.setEmail(rs.getString("email"));
+        user.setPassword(rs.getString("password"));
+        user.setResetPasswordToken(rs.getString("reset_password_token"));
+
+        return user;
+    }
 }
 
   

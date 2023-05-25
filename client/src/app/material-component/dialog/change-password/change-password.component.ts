@@ -63,7 +63,7 @@ export class ChangePasswordComponent implements OnInit {
       confirmPassword: formData.confirmPassword,
     };
 
-    console.log(data);
+    // console.log(data);
 
     this.userSvc
       .changePassword(data)

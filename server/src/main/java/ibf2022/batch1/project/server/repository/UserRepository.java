@@ -4,8 +4,11 @@ import static ibf2022.batch1.project.server.repository.Queries.SQL_GET_ALL_ADMIN
 import static ibf2022.batch1.project.server.repository.Queries.SQL_GET_ALL_WHERE_ROLE_USER;
 import static ibf2022.batch1.project.server.repository.Queries.SQL_GET_USER_BY_EMAIL;
 import static ibf2022.batch1.project.server.repository.Queries.SQL_GET_USER_BY_ID;
+import static ibf2022.batch1.project.server.repository.Queries.SQL_GET_USER_BY_RESET_PASSWORD_TOKEN;
 import static ibf2022.batch1.project.server.repository.Queries.SQL_INSERT_TO_USER_TABLE;
+import static ibf2022.batch1.project.server.repository.Queries.SQL_RESET_USER_PASSWORD;
 import static ibf2022.batch1.project.server.repository.Queries.SQL_UPDATE_USER_PASSWORD;
+import static ibf2022.batch1.project.server.repository.Queries.SQL_UPDATE_USER_RESET_PASSWORD_TOKEN_BY_EMAIL;
 import static ibf2022.batch1.project.server.repository.Queries.SQL_UPDATE_USER_STATUS_BY_EMAIL;
 
 import java.sql.PreparedStatement;
@@ -106,28 +109,7 @@ public class UserRepository {
         return Optional.of(User.create(rs));
 
     }
-
-    // // TODO: DECIDE TO USE UPDATEUSERSTATUSBYEMAIL OR BYID
-    // public int updateUserStatus(String status, Integer id) {
-    // log.info(">>>>> inside updateUserStatus - status,id : {} : {} ", status, id);
-
-    // Integer updated = 0;
-
-    // updated = jdbcTemplate.update(SQL_UPDATE_USER_STATUS_BY_ID, new
-    // PreparedStatementSetter() {
-
-    // @Override
-    // public void setValues(PreparedStatement ps) throws SQLException {
-    // ps.setString(1, status);
-    // ps.setInt(2, id);
-    // }
-
-    // });
-    // log.info(">>>>> inside updateUserStatus - isUpdated? {} ", updated);
-
-    // return updated;
-    // }
-
+    
     public List<UserWrapper> getAllAdmin() {
 
         List<UserWrapper> admins = jdbcTemplate.query(
@@ -155,6 +137,60 @@ public class UserRepository {
         });
 
         log.info(">>>>> inside save - isUpdated? {} ", updated);
+
+        return updated;
+    }
+
+    
+
+    public Optional<User> findByResetPasswordToken(String token) {
+        log.info(">>>>> Inside findByResetPasswordToken: {} ", token);
+
+        SqlRowSet rs = jdbcTemplate.queryForRowSet(SQL_GET_USER_BY_RESET_PASSWORD_TOKEN, token);
+
+        if (!rs.next())
+            return Optional.empty();
+
+        return Optional.of(User.createForResetPassword(rs));
+    }
+
+    public int updateResetPasswordToken(User user) {
+        log.info(">>>>> inside updateUserResetPasswordToken - user: {} ", user);
+        // log.info(">>>>> inside updateUserResetPasswordToken - token: {} ", token);
+
+        Integer updated = 0;
+
+        updated = jdbcTemplate.update(SQL_UPDATE_USER_RESET_PASSWORD_TOKEN_BY_EMAIL, new PreparedStatementSetter() {
+
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                ps.setString(1, user.getResetPasswordToken());
+                ps.setString(2, user.getEmail());
+          
+            }
+        });
+        log.info(">>>>> inside updateUserResetPasswordToken - isUpdated? {} ", updated);
+
+        return updated;
+    }
+
+    public int resetUserPassword(User user) {
+
+        log.info(">>>>> Inside resetUserPassword: {} ", user);
+
+        Integer updated = 0;
+
+        updated = jdbcTemplate.update(SQL_RESET_USER_PASSWORD, new PreparedStatementSetter() {
+
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                ps.setString(1, user.getPassword());
+                ps.setString(2, user.getResetPasswordToken());
+                ps.setString(3, user.getEmail());
+            }
+        });
+
+        log.info(">>>>> inside resetUserPassword - isUpdated? {} ", updated);
 
         return updated;
     }

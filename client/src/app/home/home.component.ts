@@ -1,11 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { SignupComponent } from '../components/signup/signup.component';
-import { ForgotPasswordComponent } from '../components/forgot-password/forgot-password.component';
-import { LoginComponent } from '../components/login/login.component';
+import {
+  MatDialog,
+  MatDialogConfig,
+} from '@angular/material/dialog';
+import { SignupComponent } from '../home/signup/signup.component';
+
+import { LoginComponent } from '../home/login/login.component';
 import { UserService } from '../services/user.service';
 import { Router } from '@angular/router';
 import { catchError, tap } from 'rxjs';
+
 
 @Component({
   selector: 'app-home',
@@ -13,6 +17,8 @@ import { catchError, tap } from 'rxjs';
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
+  token: any;
+
   constructor(
     private dialog: MatDialog,
     private userSvc: UserService,
@@ -20,7 +26,7 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // when at home pag and valid token is availble route to cafe/dashboard
+    // when at home page and valid token is availble route to cafe/dashboard
     this.userSvc
       .checkToken()
       .pipe(
@@ -33,6 +39,7 @@ export class HomeComponent implements OnInit {
         })
       )
       .subscribe();
+
   }
 
   signupAction() {
@@ -42,17 +49,31 @@ export class HomeComponent implements OnInit {
     this.dialog.open(SignupComponent, dialogConfig);
   }
 
-  forgotPasswordAction() {
-    const dialogConfig = new MatDialogConfig();
-
-    dialogConfig.width = '550px';
-    this.dialog.open(ForgotPasswordComponent, dialogConfig);
-  }
-
   loginAction() {
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.width = '550px';
     this.dialog.open(LoginComponent, dialogConfig);
   }
+
+  greetings() {
+    const currentTime = new Date();
+    const currentHour = currentTime.getHours();
+    let greeting;
+
+    switch (true) {
+      case currentHour < 12:
+        greeting = 'Good morning';
+        break;
+      case currentHour < 18:
+        greeting = 'Good afternoon';
+        break;
+      default:
+        greeting = 'Good evening';
+        break;
+    }
+    return greeting;
+  }
+
+
 }

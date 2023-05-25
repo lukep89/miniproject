@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ibf2022.batch1.project.server.model.UserWrapper;
@@ -89,7 +90,6 @@ public class UserController {
         return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
     }
 
-    
     @PutMapping(path = "/changePassword")
     public ResponseEntity<String> changePassword(@RequestBody String payload) {
 
@@ -105,7 +105,20 @@ public class UserController {
     public ResponseEntity<String> forgetPassword(@RequestBody String payload) {
 
         try {
-            return userSvc.forgotPassword(payload);
+            return userSvc.updateResetPasswordToken(payload);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
+    }
+
+    @PutMapping(path = "/resetPassword")
+    public ResponseEntity<String> resetPassword(@RequestParam("token") String token, @RequestBody String payload) {
+        System.out.println(">>>> Inside resetPassword controller - token: " + token);
+
+        try {
+            return userSvc.resetPassword(token, payload);
         } catch (Exception e) {
             e.printStackTrace();
         }

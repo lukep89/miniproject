@@ -1,22 +1,24 @@
-<!-- <p>home works!</p> -->
-<div class="bg-image"></div>
+<div class="container">
+  <div class="bg-image"></div>
+  <div class="bg-text">Hello, {{ greetings() }}!</div>
+</div>
 
 <div class="wrapper sticky">
   <nav class="navbar-fixed-top">
     <a href="#" class="logo">
-      <mat-icon>storefront</mat-icon> Cafe Management System
+      <mat-icon>storefront</mat-icon>
+      Cafe Management System
     </a>
     <ul>
       <li>
-         <a (click)="loginAction()">Login</a>
+        <a (click)="loginAction()">Login</a>
         &nbsp;
         <a (click)="signupAction()">Signup</a>
-        &nbsp;
-        <a (click)="forgotPasswordAction()">Forgot Password?</a>
       </li>
     </ul>
   </nav>
 </div>
-<div class="footer" id="signup">
-  <h2>All right reserved @Pyne</h2>
+
+<div class="footer">
+  <p>Cafe Management System - All right reserved - @Pyne</p>
 </div>

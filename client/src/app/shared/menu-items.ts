@@ -24,6 +24,34 @@ const MENUITEMS = [
     icon: 'category',
     role: 'admin', // only admin role can access
   },
+  {
+    state: 'product',
+    name: 'Manage Product',
+    type: 'link',
+    icon: 'inventory_2',
+    role: 'admin', // only admin role can access
+  },
+  {
+    state: 'order',
+    name: 'Manage Order',
+    type: 'link',
+    icon: 'shopping_cart',
+    role: '', // all role can access
+  },
+  {
+    state: 'bill',
+    name: 'View Bill',
+    type: 'link',
+    icon: 'receipt_long',
+    role: '', // all role can access
+  },
+  {
+    state: 'user',
+    name: 'Manage User',
+    type: 'link',
+    icon: 'people',
+    role: 'admin', // admin can access only
+  },
 ];
 
 @Injectable()

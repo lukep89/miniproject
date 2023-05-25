@@ -124,10 +124,11 @@ public class ProductRepository {
         return updated;
     }
 
-    public List<ProductByCategoryWrapper> getProductByCategory(Integer id) {
+    public List<ProductByCategoryWrapper> getProductByCategory(Integer catId) {
 
         List<ProductByCategoryWrapper> products = jdbcTemplate.query(
-                SQL_GET_ACTIVE_PRODUCT_BY_CATEGORY_ID, BeanPropertyRowMapper.newInstance(ProductByCategoryWrapper.class), id);
+                SQL_GET_ACTIVE_PRODUCT_BY_CATEGORY_ID, BeanPropertyRowMapper.newInstance(ProductByCategoryWrapper.class), 
+                catId);
 
         log.info(">>>> Inside getProductByCategory  size: {}", products.size());
 

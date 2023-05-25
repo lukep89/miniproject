@@ -3,6 +3,7 @@ package ibf2022.batch1.project.server.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -101,12 +103,13 @@ public class UserService {
         JsonObject obj = CafeUtils.jsonStringToJsonObj(json);
 
         User user = new User();
-        // TODO: use UUID for id? if yes need to update your db datatype
-
         user.setName(obj.getString("name"));
         user.setContactNumber(obj.getString("contactNumber"));
         user.setEmail(obj.getString("email"));
-        user.setPassword(obj.getString("password"));
+       
+        BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
+        user.setPassword(bcrypt.encode(obj.getString("password")));
+
         user.setStatus("inactive");
         user.setRole("user");
 
@@ -118,7 +121,7 @@ public class UserService {
 
         try {
             JsonObject obj = CafeUtils.jsonStringToJsonObj(payload);
-            // from the payload get the email and password for authentication
+
             Authentication auth = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             obj.getString("email"), obj.getString("password")));
@@ -126,6 +129,7 @@ public class UserService {
             log.info(">>>> inside login , auth: {} ", auth);
 
             if (auth.isAuthenticated()) {
+
                 // if user is authenticated and is status is active
                 if (customerUserDetailsService.getUserDetail().getStatus()
                         .equalsIgnoreCase("active")) {
@@ -191,39 +195,12 @@ public class UserService {
 
                     log.info(">>>> allAdminEmail: {}", allAdminEmail.size());
 
-                    sendEmailToAllAdmin(status, email, allAdminEmail);
+                    emailUtils.sendEmailToAllAdmin(status, email, allAdminEmail);
 
                     return CafeUtils.getRespEntity(HttpStatus.OK, "Updated user status successfully");
                 } else {
                     return CafeUtils.getRespEntity(HttpStatus.OK, "User email doesn't exist");
                 }
-
-                // // TODO: DECIDE TO USE UPDATEUSERSTATUSBYEMAIL OR BYID
-                // // IF USE FIND BY ID
-                // Optional<User> opt =
-                // userRepo.findById(Integer.parseInt(obj.getString("id")));
-                // if (opt.isPresent()) {
-                // String status = obj.getString("status");
-                // Integer id = Integer.parseInt(obj.getString("id"));
-                // userRepo.updateUserStatus(status, id);
-                // List<String> allAdminEmail = userRepo.getAllAdmin().stream()
-                // .map(u -> u.getEmail())
-                // .collect(Collectors.toList());
-
-                // System.out.println(">>>> allAdminEmail: " + allAdminEmail.size());
-
-                // String email = obj.getString("email");
-
-                // sendEmailToAllAdmin(status, email, allAdminEmail);
-
-                // return ResponseEntity
-                // .status(HttpStatus.OK)
-                // .body(">>>> Updated user status successfully");
-                // } else {
-                // return ResponseEntity
-                // .status(HttpStatus.OK)
-                // .body(">>>> User email doesn't exist");
-                // }
 
             } else {
                 return CafeUtils.getRespEntity(HttpStatus.UNAUTHORIZED, "Unauthorized access");
@@ -233,24 +210,6 @@ public class UserService {
             e.printStackTrace();
         }
         return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
-    }
-
-    private void sendEmailToAllAdmin(String status, String userEmail, List<String> allAdminEmail) {
-        allAdminEmail.remove(jwtFilter.getCurrentUser());
-
-        if (status != null && status.equalsIgnoreCase("active")) {
-            emailUtils.sendSimpleMessgae(
-                    jwtFilter.getCurrentUser(),
-                    "Account Approved",
-                    "USER: - " + userEmail + "\n has been approved by \n" + "ADMIN: - " + jwtFilter.getCurrentUser(),
-                    allAdminEmail);
-        } else {
-            emailUtils.sendSimpleMessgae(
-                    jwtFilter.getCurrentUser(),
-                    "Account Disabled  ",
-                    "USER: - " + userEmail + "\n has been disabled by \n" + "ADMIN: - " + jwtFilter.getCurrentUser(),
-                    allAdminEmail);
-        }
     }
 
     // method to allow user to route relevant user-only page.
@@ -263,6 +222,7 @@ public class UserService {
 
         try {
             JsonObject obj = CafeUtils.jsonStringToJsonObj(payload);
+            System.out.println(">>>>> changePassword - payload: " + payload);
 
             Optional<User> opt = userRepo.findByEmail(jwtFilter.getCurrentUser());
             log.info(">>>> Inside chaangePassword - jetFiler: {}", jwtFilter.getCurrentUser());
@@ -271,9 +231,14 @@ public class UserService {
 
                 User user = opt.get();
 
-                if (user.getPassword().equals(obj.getString("oldPassword"))) {
+                String dbPwd = user.getPassword();
 
-                    user.setPassword(obj.getString("newPassword"));
+                BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
+
+                if (bcrypt.matches(obj.getString("oldPassword"), dbPwd)) {
+
+                    user.setPassword(bcrypt.encode(obj.getString("newPassword")));
+
                     userRepo.updateUserPassword(user);
 
                     return CafeUtils.getRespEntity(HttpStatus.OK, "Updated password successfully");
@@ -291,27 +256,61 @@ public class UserService {
         return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
     }
 
-    public ResponseEntity<String> forgotPassword(String payload) {
+    public ResponseEntity<String> updateResetPasswordToken(String payload) { // WORKING
 
         try {
             JsonObject obj = CafeUtils.jsonStringToJsonObj(payload);
 
             Optional<User> opt = userRepo.findByEmail(obj.getString("email"));
+
             if (opt.isPresent()) {
                 User user = opt.get();
-                log.info(">>>> Inside forgotPassword - user: {}", user);
+                log.info(">>>> Inside updateUserResetPasswordToken - user: {}", user);
+
+                // generate and set a resetPasswordToken
+                String token = UUID.randomUUID().toString().substring(0, 8);
+                user.setResetPasswordToken(token);
+
+                // save resetPasswordToken to user db
+                userRepo.updateResetPasswordToken(user);
 
                 if (Strings.hasText(obj.getString("email"))) {
-                    emailUtils.forgotPasswordMail(user.getEmail(), "Credentials by Cafe Management System",
-                            user.getPassword());
+                    emailUtils.resetPasswordMail(user.getEmail(), "Reset Password",
+                            token);
                 }
-
                 return CafeUtils.getRespEntity(HttpStatus.OK, "Check your email for credentials");
 
             } else {
                 return CafeUtils.getRespEntity(HttpStatus.OK, "Check your email for credentials...");
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
+    }
 
+    public ResponseEntity<String> resetPassword(String token, String payload) {
+
+        try {
+            JsonObject obj = CafeUtils.jsonStringToJsonObj(payload);
+
+            Optional<User> opt = userRepo.findByResetPasswordToken(token);
+
+            if (opt.isPresent()) {
+                User user = opt.get();
+                log.info(">>>> Inside resetPassword - user: {}", user);
+
+                BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
+                user.setPassword(bcrypt.encode(obj.getString("newPassword")));
+                user.setResetPasswordToken(null);
+
+                userRepo.resetUserPassword(user);
+
+                return CafeUtils.getRespEntity(HttpStatus.OK, "Reset password successfully");
+
+            } else {
+                return CafeUtils.getRespEntity(HttpStatus.BAD_REQUEST, "User not found. Password was not reset");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

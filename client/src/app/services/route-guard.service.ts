@@ -4,6 +4,7 @@ import {
   ActivatedRoute,
   ActivatedRouteSnapshot,
   Router,
+  RouterStateSnapshot,
 } from '@angular/router';
 import { SnackbarService } from './snackbar.service';
 import jwtDecode from 'jwt-decode';
@@ -20,6 +21,7 @@ export class RouteGuardService {
     public router: Router,
     private snakebarSvc: SnackbarService
   ) {}
+
 
   canActivate(activatedRoute: ActivatedRouteSnapshot): boolean {
     let expectedRoleArray = activatedRoute.data;

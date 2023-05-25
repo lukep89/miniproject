@@ -28,17 +28,17 @@ export class CategoryComponent implements OnInit {
     private categorySvc: CategoryService,
     private snackbarSvc: SnackbarService,
     public dialogRef: MatDialogRef<CategoryComponent>
-  ) {
-    console.log(dialogData);
-  }
+  ) {}
 
   ngOnInit(): void {
     this.categoryForm = this.createForm();
 
     if (this.dialogData.action === 'Edit') {
+      console.log(this.dialogData);
+
       this.dialogAction = 'Edit';
       this.action = 'Update';
-      this.categoryForm.patchValue(this.dialogData);
+      this.categoryForm.patchValue(this.dialogData.data);
     }
   }
 
@@ -75,7 +75,7 @@ export class CategoryComponent implements OnInit {
           this.onAddCategory.emit(); // used to refresh the table after receiving the response from backend
 
           this.responseMessage = response?.message;
-          this.snackbarSvc.openSnckBar(this.responseMessage, '');
+          this.snackbarSvc.openSnckBar(this.responseMessage, 'success');
         }),
         catchError((error) => {
           console.log(error);

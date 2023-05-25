@@ -77,13 +77,6 @@ public class CategoryRepository {
         return Optional.of(Category.create(rs));
     }
 
-    // // TODO: frontend will list all the category when adding new category
-    // public Optional<Category> findByName(String name) {
-    // SqlRowSet rs = jdbcTemplate.queryForRowSet(SQL_GET_CATEGORY_BY_NAME, name);
-    // if (!rs.next())
-    // return Optional.empty();
-    // return Optional.of(Category.create(rs));
-    // }
 
     public int updateCategory(Category cat) {
         // log.info(">>>>> Inside categoryRepo - updateCategory: {} ", cat);

@@ -32,15 +32,6 @@ public class CategoryService {
 
         try {
             if (jwtFilter.isAdmin()) {
-                JsonObject obj = CafeUtils.jsonStringToJsonObj(payload);
-
-                // // TODO: frontend will list all the category when adding new category
-                // Optional<Category> opt = categoryRepo.findByName(obj.getString("name"));
-                // if (opt.isPresent()) {
-                // return ResponseEntity
-                // .status(HttpStatus.BAD_REQUEST)
-                // .body(">>>> Category already exist");
-                // }
 
                 if (validateCategoryPayload(payload, false)) {
                     categoryRepo.saveCategory(getCategoryFromPayload(payload, false));

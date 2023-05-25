@@ -6,7 +6,7 @@ import jwtDecode from 'jwt-decode';
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
-  styleUrls: [],
+  styleUrls: ['./sidebar.component.css'],
 })
 export class SidebarComponent implements OnDestroy {
   mobileQuery: MediaQueryList;
@@ -29,12 +29,12 @@ export class SidebarComponent implements OnDestroy {
 
     this.mobileQuery = media.matchMedia('(min-width: 768px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-    // this.mobileQuery.addListener(this._mobileQueryListener);
+
     this.mobileQuery.addEventListener('change', this._mobileQueryListener);
   }
 
   ngOnDestroy(): void {
-    // this.mobileQuery.removeListener(this._mobileQueryListener);
+    
     this.mobileQuery.removeEventListener('change', this._mobileQueryListener);
   }
 }

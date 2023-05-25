@@ -2,6 +2,7 @@ package ibf2022.batch1.project.server.utils;
 
 import java.io.File;
 import java.io.StringReader;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.springframework.http.HttpStatus;
@@ -37,6 +38,14 @@ public class CafeUtils {
         // String id = UUID.randomUUID().toString().substring(0, 8);
 
         return "BILL-" + time;
+    }
+
+    public static String getDate(){
+        Date currentDate = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String formattedDate = dateFormat.format(currentDate);
+
+        return formattedDate;
     }
 
     public static final String STORE_LOCATION = "/Users/lukepennefather/CafeMgmtApp/billsStoredFiles";

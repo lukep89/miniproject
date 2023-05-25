@@ -2,15 +2,14 @@
   float: right;
 }
 
+
 mat-card {
   padding: 20px;
+  border-radius: 4px;
+  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.05) !important
 }
 
-table {
-  width: 100%;
+b {
+  margin: 5px 8px;
 }
 
-::ng-deep .highlight {
-  color: white;
-  background: #673ab7;
-}

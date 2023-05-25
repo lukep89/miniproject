@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ibf2022.batch1.project.server.service.DashboardService;
-import jakarta.json.JsonObject;
 
 @RestController
 @RequestMapping(path = "/api/dashboard")
@@ -24,6 +23,5 @@ public class DashboardController {
     ResponseEntity<Map<String, Object>> getCount() {
         return dashboardSvc.getCount();
     }
-
 
 }

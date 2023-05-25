@@ -31,6 +31,7 @@ public class CustomerUserDetailsService implements UserDetailsService {
         if (opt.isPresent()) {
 
             userDetail = opt.get();
+            log.info(">>>> Inside loadUserByUsername - userDetail: {} ", userDetail);
 
             return new org.springframework.security.core.userdetails.User(
                     userDetail.getEmail(),

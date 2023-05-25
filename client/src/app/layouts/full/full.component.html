@@ -7,13 +7,13 @@
         value="sidebarclosed"
         style="vertical-align: bottom"
       >
-        <mat-icon>menu</mat-icon></button
+        <mat-icon>view_sidebar</mat-icon></button
       ><b>
         <span style="vertical-align: middle">
           <mat-icon>storefront</mat-icon>
         </span>
       </b>
-      <span fxShow="false" fxShow.gt-xs> Cafe Management System </span>
+      <span fxShow="false" fxShow.gt-xs>Cafe Management System </span>
     </div>
     <span fxFlex></span>
 
@@ -27,7 +27,6 @@
     <mat-sidenav
       #snav
       id="snav"
-      class="dark-sidebar pl-xs"
       [mode]="mobileQuery.matches ? 'side' : 'over'"
       fixedTopGap="0"
       [opened]="mobileQuery.matches"

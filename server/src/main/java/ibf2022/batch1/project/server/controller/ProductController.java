@@ -43,7 +43,7 @@ public class ProductController {
     }
 
     @GetMapping(path = "/get")
-    public ResponseEntity<List<ProductWrapper>> getAllProduct(@RequestBody String payload) {
+    public ResponseEntity<List<ProductWrapper>> getAllProduct() {
 
         try {
             return productSvc.getAllProduct();
@@ -78,7 +78,7 @@ public class ProductController {
         return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
     }
 
-    @PostMapping(path = "/updateStatus")
+    @PutMapping(path = "/updateStatus")
     public ResponseEntity<String> updateStatus(@RequestBody String payload) {
 
         try {
@@ -90,11 +90,11 @@ public class ProductController {
         return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
     }
 
-    @GetMapping(path = "/getByCategory/{id}")
-    public ResponseEntity<List<ProductByCategoryWrapper>> getByCategory(@PathVariable Integer id) {
+    @GetMapping(path = "/getByCategory/{catId}")
+    public ResponseEntity<List<ProductByCategoryWrapper>> getByCategory(@PathVariable Integer catId) {
 
         try {
-            return productSvc.getProductByCategory(id);
+            return productSvc.getProductByCategory(catId);
 
         } catch (Exception e) {
             e.printStackTrace();

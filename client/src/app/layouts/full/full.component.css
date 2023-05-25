@@ -1,0 +1,55 @@
+.main-container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+mat-toolbar {
+  box-shadow: 1px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+.topbar {
+  padding: 0px 15px;
+}
+
+.navbar-header {
+  text-align: center;
+}
+
+b {
+  margin-right: 5px;
+}
+
+.example-sidenav-container {
+  /* When the sidenav is not fixed, stretch the sidenav container to fill the available space. This
+     causes `<mat-sidenav-content>` to act as our scrolling element for desktop layouts. */
+  flex: 1;
+}
+
+.example-sidenav-container {
+  /* When the sidenav is fixed, don't constrain the height of the sidenav container. This allows the
+     `<body>` to be our scrolling element for mobile layouts. */
+  flex: 1 0 auto;
+}
+
+mat-sidenav {
+  width: 240px;
+  padding-top: 0px;
+}
+
+#snav {
+  box-shadow: 1px 0px 20px rgba(0, 0, 0, 0.08);
+}
+
+.page-wrapper {
+  height: calc(100vh - 64px);
+}
+
+.page-content {
+  padding: 15px;
+}

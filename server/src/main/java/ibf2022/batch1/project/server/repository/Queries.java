@@ -40,9 +40,14 @@ public class Queries {
                         """;
 
         public static final String SQL_UPDATE_USER_PASSWORD = """
-                        update user set password = ?, date_updated = now()
+                        update user set password = ?
                         where email = ?;
                         """;
+
+        // public static final String SQL_UPDATE_USER_PASSWORD = """
+        // update user set password = ?, date_updated = now()
+        // where email = ?;
+        // """;
 
         // For Admin to get category
         public static final String SQL_GET_ALL_CATEGORY = """
@@ -55,7 +60,7 @@ public class Queries {
                         where c.id in
                         (select p.category_id
                         from product as p
-                        where p.status = 'true');
+                        where p.status = 'active');
                         """;
 
         public static final String SQL_INSERT_TO_CATEGORY_TABLE = """
@@ -64,12 +69,6 @@ public class Queries {
                                 value
                                 (?);
                         """;
-
-        // // TODO: frontend will list all the category when adding new category
-        // public static final String SQL_GET_CATEGORY_BY_NAME = """
-        // select * from category
-        // where name = ?;
-        // """;
 
         public static final String SQL_GET_CATEGORY_BY_ID = """
                         select * from category
@@ -122,7 +121,6 @@ public class Queries {
                         on p.category_id = c.id
                         where p.category_id = ? and status = 'active';
                         """;
-
         public static final String SQL_INSERT_TO_BILL_TABLE = """
                         insert into bill
                            (uuid, name, email, contact_number, payment_method,
@@ -130,6 +128,14 @@ public class Queries {
                            value
                            (?, ?, ?, ?, ?, ?, ?, ?);
                            """;
+
+        // public static final String SQL_INSERT_TO_BILL_TABLE = """
+        // insert into bill
+        // (uuid, name, email, contact_number, payment_method,
+        // total_amount, product_details, created_by, created_on)
+        // value
+        // (?, ?, ?, ?, ?, ?, ?, ?, now());
+        // """;
 
         // For Admin to get all bills
         public static final String SQL_GET_ALL_BILL = """
@@ -163,4 +169,21 @@ public class Queries {
         public static final String SQL_COUNT_BILL = """
                         select count(*) from bill;
                         """;
+
+        public static final String SQL_UPDATE_USER_RESET_PASSWORD_TOKEN_BY_EMAIL = """
+                        update user set reset_password_token = ?
+                        where email = ?;
+                        """;
+
+        public static final String SQL_GET_USER_BY_RESET_PASSWORD_TOKEN = """
+                        select * from user
+                        where reset_password_token = ?;
+                        """;
+
+        public static final String SQL_RESET_USER_PASSWORD = """
+                        update user set password = ?, reset_password_token = ?
+                        where email = ?;
+                        """;
+
+
 }

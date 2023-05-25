@@ -26,7 +26,11 @@ export class CategoryService {
     });
   }
 
-  getCategory() {
+  getCategoryList() {
     return this.http.get(this.url + '/category/get');
+  }
+
+  getFilteredCategoryList() {
+    return this.http.get(this.url + '/category/get?filterValue=true');
   }
 }

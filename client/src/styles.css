@@ -2,11 +2,30 @@
 
 html,
 body {
+  width: 100%;
   height: 100%;
 }
+
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.table-responsive,
+mat-table,
+table {
+  width: 100%;
+  text-align: left;
+  overflow: auto;
+  min-width: 280px;
+  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.05) !important;
+}
+
+.table-responsive,
+mat-header-row,
+mat-header-cell,
+mat-cell {
+  white-space: nowrap;
 }
 
 /* responsibe table */
@@ -15,17 +34,22 @@ body {
     overflow-x: auto !important;
   }
 
-  .mat-table {
-    min-width: 800px;
+  table,
+  mat-table {
+    min-width: auto;
+    display: flexbox;
   }
 }
 
-.mat-row {
+tr,
+mat-row {
   height: auto;
 }
 
-.mat-header-cell,
-.mat-cell {
+th,
+mat-header-cell,
+td,
+mat-cell {
   text-align: center !important;
   padding: 0px 8px 0px 15px !important;
 }
@@ -33,26 +57,26 @@ body {
 .black-snackbar {
   --mdc-snackbar-container-color: black;
   --mdc-snackbar-supporting-text-color: white;
-  /* --mdc-snackbar-supporting-text-size: 18px; */
+  text-align: center;
 }
 
 .green-snackbar {
-  --mdc-snackbar-container-color: #14d373;
+  --mdc-snackbar-container-color: #25d07a;
   --mdc-snackbar-supporting-text-color: black;
-  /* --mdc-snackbar-supporting-text-size: 18px; */
+  text-align: center;
 }
 
-.mat-snack-bar-container {
-  margin-right: auto !important;
-  margin-left: auto !important;
-  width: 40vw !important;
-  min-width: 90% !important;
-  max-width: 100vw !important;
-  margin-top: 70px !important;
-  padding: 20px !important;
-  
-}
 
 .spacer {
-  flex: 1 auto;
+  flex: 1 1 auto;
+}
+
+.float-right {
+  float: right;
+}
+
+.mat-typography {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 18px;
+  font-weight: 400;
 }

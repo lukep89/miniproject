@@ -1,0 +1,29 @@
+mat-list-item {
+  height: auto;
+  background: transparent;
+}
+
+
+a {
+  text-decoration: none;
+  height: 45px;
+  padding: 0 10px;
+  align-items: center;
+  display: flex;
+  font-size: 15px;
+  white-space: nowrap;
+  color: #673ab7;
+}
+
+a:hover {
+  color: #ffffff;
+  background: #7b1fa2;
+  border-radius: 4px;
+  transition: 0.2s ease-in;
+}
+
+span {
+  display: block;
+  padding: 0px 15px;
+}
+

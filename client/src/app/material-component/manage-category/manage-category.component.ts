@@ -37,7 +37,7 @@ export class ManageCategoryComponent implements OnInit {
 
   tableData() {
     this.categorySvc
-      .getCategory()
+      .getCategoryList()
       .pipe(
         tap((response: any) => {
           console.log(response);

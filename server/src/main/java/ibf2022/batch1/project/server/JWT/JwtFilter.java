@@ -40,8 +40,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // if httprequest matches these paths
         if (request.getServletPath()
-                .matches("/api/user/login|/api/user/signup|/api/user/forgotPassword")) {
-            // .matches("/api/user/login|/api/user/forgotPassword")) { // for testing
+                .matches("/api/user/login|/api/user/signup|/api/user/forgotPassword|/api/user/resetPassword")) {
 
             // no token validation required
             filterChain.doFilter(request, response);

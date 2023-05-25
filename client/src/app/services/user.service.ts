@@ -52,8 +52,33 @@ export class UserService {
   changePassword(data: any) {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
 
-    return this.http.put(this.url + "/user/changePassword", data, {
+    return this.http.put(this.url + '/user/changePassword', data, {
       headers: headers,
-    }); 
+    });
+  }
+
+  getUsers() {
+    return this.http.get(this.url + '/user/getAllUsers');
+  }
+
+  updateUser(data: any) {
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+
+    return this.http.put(this.url + '/user/updateStatus', data, {
+      headers: headers,
+    });
+  }
+
+  resetPassword(data: any, paramValue: String) {
+    console.log(data, paramValue);
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+
+    return this.http.put(
+      this.url + '/user/resetPassword?token=' + paramValue,
+      data,
+      {
+        headers: headers,
+      }
+    );
   }
 }

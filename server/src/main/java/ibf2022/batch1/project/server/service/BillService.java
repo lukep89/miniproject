@@ -2,16 +2,19 @@ package ibf2022.batch1.project.server.service;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.apache.pdfbox.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -48,6 +51,9 @@ public class BillService {
     @Autowired
     JwtFilter jwtFilter;
 
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
+
     public ResponseEntity<String> generateReport(String payload) {
         log.info(">>>> Inside generateReport - payload: {} \n", payload);
 
@@ -56,7 +62,7 @@ public class BillService {
             if (validateBillPayload(payload)) {
 
                 JsonObject obj = CafeUtils.jsonStringToJsonObj(payload);
-                // log.info("Inside generateReport - obj: {} \n", obj);
+                log.info("Inside generateReport - obj: {} \n", obj);
 
                 String fileName;
 
@@ -75,54 +81,13 @@ public class BillService {
                             .add("productDetails", obj.getString("productDetails"))
                             .build();
 
-                    // log.info("Inside generateReport - updateObj: {} \n", updateObj);
+                    log.info("Inside generateReport - updateObj: {} \n", updateObj);
 
                     insertBill(updateObj);
                 }
 
-                String data = "Name: " + obj.getString("name") + "\n" +
-                        "Contact Number: " + obj.getString("contactNumber") + "\n" +
-                        "Emali: " + obj.getString("email") + "\n" +
-                        "Payment Method: " + obj.getString("paymentMethod");
-
-                Document pdfDocument = new Document();
-
-                PdfWriter.getInstance(pdfDocument,
-                        new FileOutputStream(CafeUtils.STORE_LOCATION + "/" + fileName + ".pdf"));
-                pdfDocument.open();
-                setRectangleBorderInPdf(pdfDocument);
-
-                Paragraph chunk = new Paragraph("Cafe Managment System", getFont("Header"));
-                chunk.setAlignment(Element.ALIGN_CENTER);
-                pdfDocument.add(chunk);
-
-                Paragraph paragraph = new Paragraph(data + "\n\n", getFont("Data"));
-                pdfDocument.add(paragraph);
-
-                PdfPTable table = new PdfPTable(5);
-                table.setWidthPercentage(100);
-                addTableHeader(table);
-
-                JsonArray jsonArray = CafeUtils.getJsonArrayFromString(obj.getString("productDetails"));
-                log.info("Inside generateReport - jsonArray: {} \n", jsonArray.size());
-
-                for (int i = 0; i < jsonArray.size(); i++) {
-
-                    JsonObject jsonObject = jsonArray.getJsonObject(i);
-
-                    log.info("Inside generateReport - jsonObject: {} \n", jsonObject);
-
-                    addRow(table, jsonObject);
-                }
-
-                pdfDocument.add(table);
-
-                Paragraph footer = new Paragraph("Total: " + obj.getString("totalAmount") + "\n" +
-                        "Thank you for visiting. Please come again!", getFont("Data"));
-
-                pdfDocument.add(footer);
-
-                pdfDocument.close();
+                // to create report
+                pdfDocument(obj, fileName);
 
                 return new ResponseEntity<String>("{\"uuid\":\"" + fileName + "\"}", HttpStatus.OK);
 
@@ -168,8 +133,66 @@ public class BillService {
         }
     }
 
+    private Document pdfDocument(JsonObject obj, String fileName) throws FileNotFoundException, DocumentException {
+
+        Document pdfDocument = new Document();
+
+        PdfWriter.getInstance(pdfDocument,
+                new FileOutputStream(CafeUtils.STORE_LOCATION + "/" + fileName + ".pdf"));
+        pdfDocument.open();
+
+        setRectangleBorderInPdf(pdfDocument);
+
+        String data =
+                // "\n" + "Bill created by: " + jwtFilter.getCurrentUser() + "\n" +
+                // "Bill created on: " + CafeUtils.getDate() + "\n\n" +
+                "Bill Id: " + fileName + "\n" +
+                        "Name: " + obj.getString("name") + "\n" +
+                        "Contact Number: " + obj.getString("contactNumber") + "\n" +
+                        "Emali: " + obj.getString("email") + "\n" +
+                        "Payment Method: " + obj.getString("paymentMethod");
+
+        Paragraph chunk = new Paragraph("Cafe Managment System", getFont("Header"));
+        chunk.setAlignment(Element.ALIGN_CENTER);
+        pdfDocument.add(chunk);
+
+        Paragraph paragraph = new Paragraph(data + "\n\n", getFont("Data"));
+        pdfDocument.add(paragraph);
+
+        PdfPTable table = new PdfPTable(5);
+        table.setWidthPercentage(100);
+        addTableHeader(table);
+
+        JsonArray jsonArray = CafeUtils.getJsonArrayFromString(obj.getString("productDetails"));
+        log.info("Inside pdfDocument - jsonArray: {} \n", jsonArray.size());
+
+        for (int i = 0; i < jsonArray.size(); i++) {
+
+            JsonObject jsonObject = jsonArray.getJsonObject(i);
+            // log.info("Inside pdfDocument - jsonObject: {} \n", jsonObject);
+
+            addRow(table, jsonObject);
+        }
+
+        pdfDocument.add(table);
+
+        double totalAmount = Double.parseDouble(obj.getString("totalAmount"));
+        String formattedTotalAmount = String.format("%.2f", totalAmount);
+
+        Paragraph footer = new Paragraph(
+                "Total: " + formattedTotalAmount + "\n\n" +
+                        "Thank you for visiting. Please come again!",
+                getFont("Data"));
+
+        pdfDocument.add(footer);
+
+        pdfDocument.close();
+        return pdfDocument;
+
+    }
+
     private void setRectangleBorderInPdf(Document pdfDocument) throws DocumentException {
-        log.info("Inside setRectangleBorderInPdf");
+        // log.info("Inside setRectangleBorderInPdf");
 
         Rectangle rect = new Rectangle(577, 825, 18, 15);
         rect.enableBorderSide(1);
@@ -183,7 +206,7 @@ public class BillService {
     }
 
     private Font getFont(String type) {
-        log.info("Inside getFont");
+        // log.info("Inside getFont");
 
         switch (type) {
             case "Header":
@@ -203,15 +226,14 @@ public class BillService {
     }
 
     private void addTableHeader(PdfPTable table) {
-        log.info("Inside addTableHeader");
+        // log.info("Inside addTableHeader");
 
         Stream.of("Name", "Category", "Quantity", "Price", "Sub Total")
                 .forEach(columTitle -> {
                     PdfPCell header = new PdfPCell();
-                    header.setBackgroundColor(BaseColor.LIGHT_GRAY);
                     header.setBorderWidth(2);
                     header.setPhrase(new Phrase(columTitle));
-                    header.setBackgroundColor(BaseColor.GRAY);
+                    header.setBackgroundColor(BaseColor.LIGHT_GRAY);
                     header.setHorizontalAlignment(Element.ALIGN_CENTER);
                     header.setVerticalAlignment(Element.ALIGN_CENTER);
 
@@ -225,8 +247,8 @@ public class BillService {
         table.addCell(data.getString("name"));
         table.addCell(data.getString("category"));
         table.addCell(data.getString("quantity"));
-        table.addCell(Integer.toString((data.getInt("price"))));
-        table.addCell(Integer.toString(data.getInt("total")));
+        table.addCell(data.getString("price"));
+        table.addCell(data.getString("total"));
 
     }
 
@@ -253,12 +275,16 @@ public class BillService {
                 return new ResponseEntity<byte[]>(byteArray, HttpStatus.BAD_REQUEST);
             }
 
+            // TODO: Redis - search uuid key to get the byteArray value
+            // TODO: Redis - if no file found. generate report and save the byteArray back into redis
+            // TODO: Redis - then get getByteArray value and return to responseEentity
             String filePath = CafeUtils.STORE_LOCATION + "/" + obj.getString("uuid") + ".pdf";
-
+            
             if (CafeUtils.isFileExist(filePath)) {
                 byteArray = getByteArray(filePath);
 
                 return new ResponseEntity<byte[]>(byteArray, HttpStatus.OK);
+
             } else {
                 JsonObject updateObj = Json.createObjectBuilder(obj)
                         .add("uuid", obj.getString("uuid"))
@@ -266,12 +292,9 @@ public class BillService {
                         .add("email", obj.getString("email"))
                         .add("contactNumber", obj.getString("contactNumber"))
                         .add("paymentMethod", obj.getString("paymentMethod"))
-                        .add("totalAmount", String.valueOf(obj.getInt("totalAmount")))
-                        // TODO: convert the payload (jsonObject) totlAmount with decimal to string with
-                        // decimal
-                        // .add("totalAmount", String.valueOf(obj.getJsonNumber("totalAmount")))
+                        .add("totalAmount", obj.getString("totalAmount"))
+
                         .add("productDetails", obj.getString("productDetails"))
-                        .add("createdBy", obj.getString("createdBy"))
                         .add("isGenerate", false)
                         .build();
 

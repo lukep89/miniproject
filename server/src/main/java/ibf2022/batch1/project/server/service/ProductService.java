@@ -17,6 +17,8 @@ import ibf2022.batch1.project.server.model.ProductWrapper;
 import ibf2022.batch1.project.server.repository.ProductRepository;
 import ibf2022.batch1.project.server.utils.CafeUtils;
 import jakarta.json.JsonObject;
+import jakarta.json.JsonValue;
+import jakarta.json.JsonValue.ValueType;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -78,13 +80,24 @@ public class ProductService {
         Product product = new Product();
 
         if (isUpdate) {
-            product.setId(Integer.parseInt(obj.getString("id")));
+            product.setId(obj.getInt("id"));
         }
         product.setName(obj.getString("name"));
         product.setDescription(obj.getString("description"));
-        product.setPrice(Float.parseFloat(obj.getString("price")));
+
+        JsonValue priceValue = obj.get("price");
+        if (priceValue.getValueType() == ValueType.STRING) {
+            // System.out.println(">>>>>>>>>> price (string): " + obj.getString("price"));
+            product.setPrice(Float.parseFloat(obj.getString("price")));
+        } else {
+            // System.out.println(">>>>>>>>>> price (int): "+ obj.getInt("price"));
+            // System.out.println(">>>>>>>>>> price (double): "+
+            // obj.getJsonNumber("price").doubleValue());
+            product.setPrice(((float) obj.getJsonNumber("price").doubleValue()));
+        }
+
         product.setStatus("active");
-        product.setCategoryId(Integer.parseInt(obj.getString("categoryId")));
+        product.setCategoryId(obj.getInt("categoryId"));
 
         return product;
 
@@ -110,7 +123,8 @@ public class ProductService {
 
                 if (validateProductPayload(payload, true)) {
                     JsonObject obj = CafeUtils.jsonStringToJsonObj(payload);
-                    Optional<Product> opt = productRepo.findById(Integer.parseInt(obj.getString("id")));
+                    log.info(">>>> inside updateProduct - obj: {}", obj);
+                    Optional<Product> opt = productRepo.findById(obj.getInt("id"));
 
                     if (opt.isPresent()) {
                         Product product = getProductFromPayload(payload, true);
@@ -171,11 +185,11 @@ public class ProductService {
             if (jwtFilter.isAdmin()) {
                 JsonObject obj = CafeUtils.jsonStringToJsonObj(payload);
 
-                Optional<Product> opt = productRepo.findById(Integer.parseInt(obj.getString("id")));
+                Optional<Product> opt = productRepo.findById(obj.getInt("id"));
                 if (opt.isPresent()) {
 
                     String status = obj.getString("status");
-                    Integer id = Integer.parseInt(obj.getString("id"));
+                    Integer id = obj.getInt("id");
 
                     productRepo.updateProductStatus(status, id);
 
@@ -194,10 +208,10 @@ public class ProductService {
         return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
     }
 
-    public ResponseEntity<List<ProductByCategoryWrapper>> getProductByCategory(Integer id) {
+    public ResponseEntity<List<ProductByCategoryWrapper>> getProductByCategory(Integer catId) {
 
         try {
-            return new ResponseEntity<List<ProductByCategoryWrapper>>(productRepo.getProductByCategory(id),
+            return new ResponseEntity<List<ProductByCategoryWrapper>>(productRepo.getProductByCategory(catId),
                     HttpStatus.OK);
 
         } catch (Exception e) {
@@ -212,7 +226,7 @@ public class ProductService {
             Optional<ProductByIdWrapper> opt = productRepo.getProductById(id);
             if (opt.isPresent()) {
                 return new ResponseEntity<>(opt.get(), HttpStatus.OK);
-                
+
             } else {
                 new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }

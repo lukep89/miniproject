@@ -3,9 +3,11 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { FullComponent } from './layouts/full/full.component';
 import { RouteGuardService } from './services/route-guard.service';
+import { ResetPasswordComponent } from './home/reset-password/reset-password.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
+  { path: 'resetPassword', component: ResetPasswordComponent },
   {
     path: 'cafe',
     component: FullComponent,
