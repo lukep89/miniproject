@@ -1,20 +1,13 @@
 package ibf2022.batch1.project.server.service;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import org.apache.pdfbox.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -51,9 +44,6 @@ public class BillService {
     @Autowired
     JwtFilter jwtFilter;
 
-    @Autowired
-    private RedisTemplate<String, String> redisTemplate;
-
     public ResponseEntity<String> generateReport(String payload) {
         log.info(">>>> Inside generateReport - payload: {} \n", payload);
 
@@ -83,13 +73,15 @@ public class BillService {
 
                     log.info("Inside generateReport - updateObj: {} \n", updateObj);
 
+                    // save to bill db
                     insertBill(updateObj);
                 }
 
-                // to create report
-                pdfDocument(obj, fileName);
+                // to create report pdf and store to mongo
+                pdfDocumentAndSaveToMongo(obj, fileName);
 
-                return new ResponseEntity<String>("{\"uuid\":\"" + fileName + "\"}", HttpStatus.OK);
+                return new ResponseEntity<String>("{\"uuid\":\"" + fileName + "\"}",
+                        HttpStatus.OK);
 
             } else {
                 return CafeUtils.getRespEntity(HttpStatus.BAD_REQUEST, "Required data not found");
@@ -131,64 +123,6 @@ public class BillService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private Document pdfDocument(JsonObject obj, String fileName) throws FileNotFoundException, DocumentException {
-
-        Document pdfDocument = new Document();
-
-        PdfWriter.getInstance(pdfDocument,
-                new FileOutputStream(CafeUtils.STORE_LOCATION + "/" + fileName + ".pdf"));
-        pdfDocument.open();
-
-        setRectangleBorderInPdf(pdfDocument);
-
-        String data =
-                // "\n" + "Bill created by: " + jwtFilter.getCurrentUser() + "\n" +
-                // "Bill created on: " + CafeUtils.getDate() + "\n\n" +
-                "Bill Id: " + fileName + "\n" +
-                        "Name: " + obj.getString("name") + "\n" +
-                        "Contact Number: " + obj.getString("contactNumber") + "\n" +
-                        "Emali: " + obj.getString("email") + "\n" +
-                        "Payment Method: " + obj.getString("paymentMethod");
-
-        Paragraph chunk = new Paragraph("Cafe Managment System", getFont("Header"));
-        chunk.setAlignment(Element.ALIGN_CENTER);
-        pdfDocument.add(chunk);
-
-        Paragraph paragraph = new Paragraph(data + "\n\n", getFont("Data"));
-        pdfDocument.add(paragraph);
-
-        PdfPTable table = new PdfPTable(5);
-        table.setWidthPercentage(100);
-        addTableHeader(table);
-
-        JsonArray jsonArray = CafeUtils.getJsonArrayFromString(obj.getString("productDetails"));
-        log.info("Inside pdfDocument - jsonArray: {} \n", jsonArray.size());
-
-        for (int i = 0; i < jsonArray.size(); i++) {
-
-            JsonObject jsonObject = jsonArray.getJsonObject(i);
-            // log.info("Inside pdfDocument - jsonObject: {} \n", jsonObject);
-
-            addRow(table, jsonObject);
-        }
-
-        pdfDocument.add(table);
-
-        double totalAmount = Double.parseDouble(obj.getString("totalAmount"));
-        String formattedTotalAmount = String.format("%.2f", totalAmount);
-
-        Paragraph footer = new Paragraph(
-                "Total: " + formattedTotalAmount + "\n\n" +
-                        "Thank you for visiting. Please come again!",
-                getFont("Data"));
-
-        pdfDocument.add(footer);
-
-        pdfDocument.close();
-        return pdfDocument;
-
     }
 
     private void setRectangleBorderInPdf(Document pdfDocument) throws DocumentException {
@@ -264,64 +198,6 @@ public class BillService {
         return new ResponseEntity<List<Bill>>(bills, HttpStatus.OK);
     }
 
-    public ResponseEntity<byte[]> getPdf(String payload) {
-        log.info("Inside getPdf - payload {}", payload);
-
-        try {
-            byte[] byteArray = new byte[0];
-            JsonObject obj = CafeUtils.jsonStringToJsonObj(payload);
-
-            if (!obj.containsKey("uuid") && validateBillPayload(payload)) {
-                return new ResponseEntity<byte[]>(byteArray, HttpStatus.BAD_REQUEST);
-            }
-
-            // TODO: Redis - search uuid key to get the byteArray value
-            // TODO: Redis - if no file found. generate report and save the byteArray back into redis
-            // TODO: Redis - then get getByteArray value and return to responseEentity
-            String filePath = CafeUtils.STORE_LOCATION + "/" + obj.getString("uuid") + ".pdf";
-            
-            if (CafeUtils.isFileExist(filePath)) {
-                byteArray = getByteArray(filePath);
-
-                return new ResponseEntity<byte[]>(byteArray, HttpStatus.OK);
-
-            } else {
-                JsonObject updateObj = Json.createObjectBuilder(obj)
-                        .add("uuid", obj.getString("uuid"))
-                        .add("name", obj.getString("name"))
-                        .add("email", obj.getString("email"))
-                        .add("contactNumber", obj.getString("contactNumber"))
-                        .add("paymentMethod", obj.getString("paymentMethod"))
-                        .add("totalAmount", obj.getString("totalAmount"))
-
-                        .add("productDetails", obj.getString("productDetails"))
-                        .add("isGenerate", false)
-                        .build();
-
-                generateReport(updateObj.toString());
-
-                byteArray = getByteArray(filePath);
-
-                return new ResponseEntity<byte[]>(byteArray, HttpStatus.OK);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private byte[] getByteArray(String filePath) throws IOException {
-
-        File existingFile = new File(filePath);
-        InputStream tragetStream = new FileInputStream(existingFile);
-
-        byte[] byteArray = IOUtils.toByteArray(tragetStream);
-
-        tragetStream.close();
-        return byteArray;
-    }
-
     public ResponseEntity<String> deleteBill(Integer id) {
         try {
             Optional<Bill> opt = billRepo.getBillById(id);
@@ -339,6 +215,120 @@ public class BillService {
             e.printStackTrace();
         }
         return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
+    }
+
+    public Document pdfDocumentAndSaveToMongo(JsonObject obj, String fileName) throws DocumentException, IOException {
+
+        Document pdfDocument = new Document();
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        PdfWriter.getInstance(pdfDocument,
+                // create a new file
+                outputStream);
+
+        pdfDocument.open();
+
+        setRectangleBorderInPdf(pdfDocument);
+
+        String data = "Bill Id: " + fileName + "\n" +
+                "Name: " + obj.getString("name") + "\n" +
+                "Contact Number: " + obj.getString("contactNumber") + "\n" +
+                "Emali: " + obj.getString("email") + "\n" +
+                "Payment Method: " + obj.getString("paymentMethod");
+
+        Paragraph chunk = new Paragraph("Cafe Managment System", getFont("Header"));
+        chunk.setAlignment(Element.ALIGN_CENTER);
+        pdfDocument.add(chunk);
+
+        Paragraph paragraph = new Paragraph(data + "\n\n", getFont("Data"));
+        pdfDocument.add(paragraph);
+
+        PdfPTable table = new PdfPTable(5);
+        table.setWidthPercentage(100);
+        addTableHeader(table);
+
+        JsonArray jsonArray = CafeUtils.getJsonArrayFromString(obj.getString("productDetails"));
+        log.info("Inside pdfDocument - jsonArray: {} \n", jsonArray.size());
+
+        for (int i = 0; i < jsonArray.size(); i++) {
+
+            JsonObject jsonObject = jsonArray.getJsonObject(i);
+            // log.info("Inside pdfDocument - jsonObject: {} \n", jsonObject);
+
+            addRow(table, jsonObject);
+        }
+
+        pdfDocument.add(table);
+
+        double totalAmount = Double.parseDouble(obj.getString("totalAmount"));
+        String formattedTotalAmount = String.format("%.2f", totalAmount);
+
+        Paragraph footer = new Paragraph(
+                "Total: " + formattedTotalAmount + "\n\n" +
+                        "Thank you for visiting. Please come again!",
+                getFont("Data"));
+
+        pdfDocument.add(footer);
+
+        pdfDocument.close();
+
+        byte[] pdfBytes = outputStream.toByteArray();
+
+        billRepo.savePdf(pdfBytes, fileName);
+
+        return pdfDocument;
+    }
+
+    public ResponseEntity<byte[]> getPdfFromMongo(String payload) {
+        log.info("Inside getPdfDO - payload {}", payload);
+
+        try {
+            byte[] byteArray = new byte[0];
+            JsonObject obj = CafeUtils.jsonStringToJsonObj(payload);
+
+            if (!obj.containsKey("uuid") && validateBillPayload(payload)) {
+                return new ResponseEntity<byte[]>(byteArray, HttpStatus.BAD_REQUEST);
+            }
+
+            String fileName = obj.getString("uuid");
+
+            // get pdf from mongo
+            Optional<byte[]> opt = billRepo.getPdfDocument(fileName);
+
+            if (opt.isPresent()) {
+                byteArray = opt.get();
+                log.info("Inside getPdfDO - byteArray {}", byteArray.length);
+
+                return new ResponseEntity<byte[]>(byteArray, HttpStatus.OK);
+
+            } else {
+                // If the file doesn't exist in mongo, generate and upload it
+                JsonObject updateObj = Json.createObjectBuilder(obj)
+                        .add("uuid", obj.getString("uuid"))
+                        .add("name", obj.getString("name"))
+                        .add("email", obj.getString("email"))
+                        .add("contactNumber", obj.getString("contactNumber"))
+                        .add("paymentMethod", obj.getString("paymentMethod"))
+                        .add("totalAmount", obj.getString("totalAmount"))
+
+                        .add("productDetails", obj.getString("productDetails"))
+                        .add("isGenerate", false)
+                        .build();
+
+                generateReport(updateObj.toString());
+
+                // Retrieve the generated PDF file from mongo
+                Optional<byte[]> opt2 = billRepo.getPdfDocument(fileName);
+                byteArray = opt2.get();
+
+                return new ResponseEntity<byte[]>(byteArray, HttpStatus.OK);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }

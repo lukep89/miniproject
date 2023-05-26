@@ -7,6 +7,7 @@ import java.util.Map;
 
 import java.util.function.Function;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -27,9 +28,8 @@ public class JwtUtil {
     // if someone tempers with the token, the secret key will be changed and not
     // match. then an exception will be thrown to alert that token was changed.
 
-    // generated from
-    // https://www.allkeysgenerator.com/Random/Security-Encryption-Key-Generator.aspx
-    private static final String SECRET_KEY = "655368566D5971337336763979244226452948404D635166546A576E5A723475";
+    @Value("${jwtSecretKey}")
+    private String JWT_SECRET_KEY;
 
     // extract the username from JWT
     public String extractUsername(String token) {
@@ -62,13 +62,14 @@ public class JwtUtil {
         return createToken(claims, username);
     }
 
-    // TODO: IF want to add name in token. then use at frontend beside the profile circle at header
-    // public String generateToken(String username, String role, String name) { 
-    //     Map<String, Object> claims = new HashMap<>();
-    //     claims.put("role", role);
-    //     claims.put("name", name);
+    // TODO: IF want to add name in token. then use at frontend beside the profile
+    // circle at header
+    // public String generateToken(String username, String role, String name) {
+    // Map<String, Object> claims = new HashMap<>();
+    // claims.put("role", role);
+    // claims.put("name", name);
 
-    //     return createToken(claims, username);
+    // return createToken(claims, username);
     // }
 
     private String createToken(Map<String, Object> claims, String username) {
@@ -101,7 +102,8 @@ public class JwtUtil {
     }
 
     private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+
+        byte[] keyBytes = Decoders.BASE64.decode(JWT_SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 

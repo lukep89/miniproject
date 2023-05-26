@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import * as saveAs from 'file-saver';
+
+import { saveAs } from 'file-saver';
 
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { catchError, pipe, tap } from 'rxjs';
@@ -208,10 +209,6 @@ export class ManageOrderComponent implements OnInit {
   validateSubmit() {
     if (
       this.totalAmount == 0 ||
-      // this.manageOrderForm.controls['name'].value === null ||
-      // this.manageOrderForm.controls['email'].value === null ||
-      // this.manageOrderForm.controls['contactNumber'].value === null ||
-      // this.manageOrderForm.controls['paymentMethod'].value === null ||
       this.manageOrderForm.controls['name'].value.trim() === '' ||
       this.manageOrderForm.controls['email'].value.trim() === '' ||
       this.manageOrderForm.controls['contactNumber'].value.trim() === '' ||

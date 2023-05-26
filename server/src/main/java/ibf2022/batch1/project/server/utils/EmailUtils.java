@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,9 @@ public class EmailUtils {
     @Autowired
     JwtFilter jwtFilter;
 
+    @Value("${spring.mail.username}")
+    private String EMAIL_ADDRESS;
+
     public void sendEmailToAllAdmin(String status, String userEmail, List<String> allAdminEmail)
             throws UnsupportedEncodingException, MessagingException {
         allAdminEmail.remove(jwtFilter.getCurrentUser());
@@ -32,7 +36,7 @@ public class EmailUtils {
 
             MimeMessage msg = emailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(msg, true);
-            helper.setFrom(new InternetAddress("${spring.mail.username}", "Cafe Magmt Support"));
+            helper.setFrom(new InternetAddress(EMAIL_ADDRESS, "Cafe Magmt Support"));
             helper.setTo(jwtFilter.getCurrentUser());
             helper.setSubject("Account Approved");
 
@@ -52,7 +56,7 @@ public class EmailUtils {
 
             MimeMessage msg = emailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(msg, true);
-            helper.setFrom(new InternetAddress("${spring.mail.username}", "Cafe Magmt Support"));
+            helper.setFrom(new InternetAddress(EMAIL_ADDRESS, "Cafe Magmt Support"));
             helper.setTo(jwtFilter.getCurrentUser());
             helper.setSubject("Account Disabled");
 
@@ -86,7 +90,7 @@ public class EmailUtils {
 
         MimeMessageHelper helper = new MimeMessageHelper(msg, true);
 
-        helper.setFrom(new InternetAddress("${spring.mail.username}", "Cafe Magmt Support"));
+        helper.setFrom(new InternetAddress(EMAIL_ADDRESS, "Cafe Magmt Support"));
         helper.setTo(to);
         helper.setSubject(subject);
 

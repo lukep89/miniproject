@@ -20,7 +20,7 @@ import { TokenInterceptorInterceptor } from './services/token-interceptor.interc
 import { HeaderComponent } from './layouts/full/header/header.component';
 import { SidebarComponent } from './layouts/full/sidebar/sidebar.component';
 import { SharedModule } from './shared/shared.module';
-import { ResetPasswordComponent } from './home/reset-password/reset-password.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
   text: 'Loading...',

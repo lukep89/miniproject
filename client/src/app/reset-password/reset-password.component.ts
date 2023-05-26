@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 
@@ -70,7 +70,6 @@ export class ResetPasswordComponent implements OnInit {
       newPassword: formData.newPassword,
       confirmPassword: formData.confirmPassword,
     };
-
     // console.log(data);
 
     const dialogConfig = new MatDialogConfig();

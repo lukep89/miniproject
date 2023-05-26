@@ -9,7 +9,9 @@ import { SnackbarService } from 'src/app/services/snackbar.service';
 import { GlobalConstants } from 'src/app/shared/global.constants';
 import { ViewBillDetailsComponent } from '../dialog/view-bill-details/view-bill-details.component';
 import { ConfirmationComponent } from '../dialog/confirmation/confirmation.component';
-import * as saveAs from 'file-saver';
+
+import { saveAs } from 'file-saver';
+
 
 @Component({
   selector: 'app-view-bill',
@@ -21,7 +23,7 @@ export class ViewBillComponent implements OnInit {
     'uuid',
     // 'name',
     'email',
-    // 'contactNumber',
+    'contactNumber',
     'paymentMethod',
     'totalAmount',
     'view',

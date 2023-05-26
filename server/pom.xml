@@ -108,18 +108,15 @@
 			<artifactId>spring-boot-starter-mail</artifactId>
     	</dependency>
 
+		
 
-		<dependency>
-			<groupId>redis.clients</groupId>
-			<artifactId>jedis</artifactId>
-			<version>4.3.1</version>
-		</dependency>
+		<!-- for mongo -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-redis</artifactId>
+			<artifactId>spring-boot-starter-data-mongodb</artifactId>
 		</dependency>
 
-
+		
 	</dependencies>
 
 	<build>
