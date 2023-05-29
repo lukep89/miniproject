@@ -1,31 +1,30 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
+// import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductService {
-  url = environment.apiUrl;
-
+  
   constructor(private http: HttpClient) {}
 
   addProduct(data: any) {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
 
-    return this.http.post(this.url + '/product/add', data, {
+    return this.http.post('/api/product/add', data, {
       headers: headers,
     });
   }
 
   getProducts() {
-    return this.http.get(this.url + '/product/get');
+    return this.http.get('/api/product/get');
   }
 
   updateProduct(data: any) {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
 
-    return this.http.put(this.url + '/product/update', data, {
+    return this.http.put('/api/product/update', data, {
       headers: headers,
     });
   }
@@ -33,7 +32,7 @@ export class ProductService {
   updateProductStatus(data: any) {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
 
-    return this.http.put(this.url + '/product/updateStatus', data, {
+    return this.http.put('/apiproduct/updateStatus', data, {
       headers: headers,
     });
   }
@@ -41,16 +40,16 @@ export class ProductService {
   deleteProduct(id: any) {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
 
-    return this.http.delete(this.url + '/product/delete/' + id, {
+    return this.http.delete('/api/product/delete/' + id, {
       headers: headers,
     });
   }
 
   getProductListByCategory(catId: any) {
-    return this.http.get(this.url + '/product/getByCategory/' + catId);
+    return this.http.get('/api/product/getByCategory/' + catId);
   }
 
   getProductById(id: any) {
-    return this.http.get(this.url + '/product/getById/' + id);
+    return this.http.get('/api/product/getById/' + id);
   }
 }

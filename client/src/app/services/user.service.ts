@@ -1,21 +1,19 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { environment } from 'src/environments/environment';
+// import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  url = environment.apiUrl;
-
   constructor(private http: HttpClient) {}
 
   // using observable
   signup(data: any) {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
 
-    return this.http.post(this.url + '/user/signup', data, {
+    return this.http.post('/api/user/signup', data, {
       headers: headers,
     });
   }
@@ -23,7 +21,7 @@ export class UserService {
   forgotPassword(data: any) {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
 
-    return this.http.post(this.url + '/user/forgotPassword', data, {
+    return this.http.post('/api/user/forgotPassword', data, {
       headers: headers,
     });
   }
@@ -31,45 +29,40 @@ export class UserService {
   login(data: any) {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
 
-    return this.http.post(this.url + '/user/login', data, {
+    return this.http.post('/api/user/login', data, {
       headers: headers,
     });
   }
 
   checkToken() {
-    return this.http.get(this.url + '/user/checkToken');
+    return this.http.get('/api/user/checkToken');
   }
 
   changePassword(data: any) {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
 
-    return this.http.put(this.url + '/user/changePassword', data, {
+    return this.http.put('/api/user/changePassword', data, {
       headers: headers,
     });
   }
 
   getUsers() {
-    return this.http.get(this.url + '/user/getAllUsers');
+    return this.http.get('/api/user/getAllUsers');
   }
 
   updateUser(data: any) {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
 
-    return this.http.put(this.url + '/user/updateStatus', data, {
+    return this.http.put('/api/user/updateStatus', data, {
       headers: headers,
     });
   }
 
   resetPassword(data: any, paramValue: String) {
-   
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
 
-    return this.http.put(
-      this.url + '/user/resetPassword?token=' + paramValue,
-      data,
-      {
-        headers: headers,
-      }
-    );
+    return this.http.put('/api/user/resetPassword?token=' + paramValue, data, {
+      headers: headers,
+    });
   }
 }

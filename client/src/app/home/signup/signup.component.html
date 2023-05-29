@@ -1,5 +1,3 @@
-
-
 <mat-toolbar color="primary">
   <mat-toolbar-row fxLayout="row">
     <span>Signup</span>
@@ -86,7 +84,9 @@
           [attr.aria-label]="'Hide password'"
           [attr.aria-pressed]="'password'"
         >
-          <mat-icon> {{ hidePassword ? "visibility_off" : "visibility" }}</mat-icon>
+          <mat-icon>
+            {{ hidePassword ? "visibility_off" : "visibility" }}</mat-icon
+          >
         </button>
         <mat-error
           *ngIf="
@@ -118,7 +118,9 @@
           [attr.aria-pressed]="'confirmPassword'"
         >
           <mat-icon>
-            {{ hideConfirmPassword ? "visibility_off" : "visibility" }}</mat-icon
+            {{
+              hideConfirmPassword ? "visibility_off" : "visibility"
+            }}</mat-icon
           >
         </button>
         <mat-error

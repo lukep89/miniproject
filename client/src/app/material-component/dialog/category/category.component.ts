@@ -62,7 +62,7 @@ export class CategoryComponent implements OnInit {
       name: formData.name,
     };
 
-    // console.log(data);
+    console.log(data);
 
     this.categorySvc
       .addCategory(data)

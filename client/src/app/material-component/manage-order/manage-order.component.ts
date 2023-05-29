@@ -250,6 +250,7 @@ export class ManageOrderComponent implements OnInit {
     this.totalAmount = Number(this.totalAmount.toFixed(2));
 
     this.dataSource = [...this.dataSource];
+    // console.log(this.dataSource);
 
     this.snackbarSvc.openSnckBar(
       GlobalConstants.productAddedMessage,
@@ -291,7 +292,7 @@ export class ManageOrderComponent implements OnInit {
       productDetails: JSON.stringify(this.dataSource),
     };
 
-    // console.log(data);
+    console.log(data);
 
     this.ngxSvc.start();
     this.billSvc

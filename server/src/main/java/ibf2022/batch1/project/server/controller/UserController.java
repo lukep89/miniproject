@@ -113,7 +113,6 @@ public class UserController {
         return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
     }
 
-
     @PutMapping(path = "/resetPassword")
     public ResponseEntity<String> resetPassword(@RequestParam("token") String token, @RequestBody String payload) {
         // System.out.println(">>>> Inside resetPassword controller - token: " + token);
@@ -126,8 +125,4 @@ public class UserController {
         return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
     }
 
-    // @GetMapping("/resetPassword")
-    // public ResponseEntity<String> resetPassword(@RequestParam("token") String token) {
-    //     return ResponseEntity.ok(token);
-    // }
 }

@@ -102,7 +102,7 @@ export class ProductComponent implements OnInit {
       price: formData.price,
       categoryId: formData.categoryId,
     };
-    // console.log(data);
+    console.log(data);
 
     this.productSvc
       .addProduct(data)
@@ -144,7 +144,7 @@ export class ProductComponent implements OnInit {
       price: formData.price,
       categoryId: formData.categoryId,
     };
-    console.log(data);
+    // console.log(data);
 
     this.productSvc
       .updateProduct(data)

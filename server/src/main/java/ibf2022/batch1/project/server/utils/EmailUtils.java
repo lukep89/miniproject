@@ -28,8 +28,8 @@ public class EmailUtils {
     @Value("${spring.mail.username}")
     private String EMAIL_ADDRESS;
 
-    @Value("${frontendUrl}")
-    private String FRONTEND_URL;
+    @Value("${linkForResetPassword}")
+    private String URL_LINK;
 
     public void sendEmailToAllAdmin(String status, String userEmail, List<String> allAdminEmail)
             throws UnsupportedEncodingException, MessagingException {
@@ -99,7 +99,7 @@ public class EmailUtils {
 
         // TODO: note to change the anchor link for forgotPassword email
         String htmlMsgContent = "<p><b>You have requested to reset your password to Cafe Management System</b>"
-                + "<p><a href=\"" + FRONTEND_URL + "/resetPassword?token=" + token
+                + "<p><a href=\"" + URL_LINK + "/resetPassword?token=" + token
                 + "\">Click here to reset your password</a></p>"
                 + "<p>If you do remember your password or have not made this request, you can ignore this email.</p>";
 

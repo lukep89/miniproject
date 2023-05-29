@@ -5,10 +5,12 @@ import {
   ActivatedRouteSnapshot,
   Router,
   RouterStateSnapshot,
+  UrlTree,
 } from '@angular/router';
 import { SnackbarService } from './snackbar.service';
 import jwtDecode from 'jwt-decode';
 import { GlobalConstants } from '../shared/global.constants';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
