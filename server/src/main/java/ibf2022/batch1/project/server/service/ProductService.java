@@ -87,12 +87,8 @@ public class ProductService {
 
         JsonValue priceValue = obj.get("price");
         if (priceValue.getValueType() == ValueType.STRING) {
-            // System.out.println(">>>>>>>>>> price (string): " + obj.getString("price"));
             product.setPrice(Float.parseFloat(obj.getString("price")));
         } else {
-            // System.out.println(">>>>>>>>>> price (int): "+ obj.getInt("price"));
-            // System.out.println(">>>>>>>>>> price (double): "+
-            // obj.getJsonNumber("price").doubleValue());
             product.setPrice(((float) obj.getJsonNumber("price").doubleValue()));
         }
 

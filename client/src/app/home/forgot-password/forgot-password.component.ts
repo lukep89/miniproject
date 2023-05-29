@@ -52,7 +52,7 @@ export class ForgotPasswordComponent implements OnInit {
       .forgotPassword(data)
       .pipe(
         tap((response: any) => {
-          console.log(response);
+          // console.log(response);
 
           this.ngxSvc.stop();
           this.dialogRef.close();

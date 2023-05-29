@@ -22,13 +22,11 @@ export class RouteGuardService {
     private snakebarSvc: SnackbarService
   ) {}
 
-
-  canActivate(activatedRoute: ActivatedRouteSnapshot): boolean {
-    let expectedRoleArray = activatedRoute.data;
-    console.log(activatedRoute);
+  canActivate(routeSnapshot: ActivatedRouteSnapshot): boolean {
+    let expectedRoleArray = routeSnapshot.data;
+    // console.log(routeSnapshot);
 
     expectedRoleArray = expectedRoleArray['expectedRole'];
-    // console.log(expectedRoleArray);
 
     const token: any = localStorage.getItem('token');
 
@@ -36,7 +34,7 @@ export class RouteGuardService {
 
     try {
       tokenPayload = jwtDecode(token);
-      console.log(tokenPayload);
+      // console.log(tokenPayload);
     } catch (error) {
       localStorage.clear();
       this.router.navigate(['/']);
@@ -49,8 +47,8 @@ export class RouteGuardService {
         expectedRole = tokenPayload.role;
       }
     }
-    console.log(expectedRole);
 
+    // console.log(expectedRole);
     if (tokenPayload.role == 'user' || tokenPayload.role == 'admin') {
       if (this.authSvc.isAuthenticated() && tokenPayload.role == expectedRole) {
         return true;

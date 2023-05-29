@@ -49,7 +49,6 @@ public class UserRepository {
 
         Integer saved = 0;
 
-        System.out.println(">>>> insert user");
         saved = jdbcTemplate.update(SQL_INSERT_TO_USER_TABLE, new PreparedStatementSetter() {
 
             @Override

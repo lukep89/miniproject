@@ -44,11 +44,8 @@ public class CustomerUserDetailsService implements UserDetailsService {
     }
 
     public ibf2022.batch1.project.server.model.User getUserDetail() {
-        log.info("Inside getUserDetail: {}", userDetail);
+        // log.info("Inside getUserDetail: {}", userDetail);
 
-        // ibf2022.batch1.project.server.model.User user = userDetail;
-        // user.setPassword(null);
-        // return user;
 
         return userDetail;
     }

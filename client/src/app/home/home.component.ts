@@ -34,7 +34,7 @@ export class HomeComponent implements OnInit {
           this.router.navigate(['/cafe/dashboard']);
         }),
         catchError((error) => {
-          console.log(error);
+          // console.log(error);
           return error;
         })
       )

@@ -44,11 +44,6 @@ public class Queries {
                         where email = ?;
                         """;
 
-        // public static final String SQL_UPDATE_USER_PASSWORD = """
-        // update user set password = ?, date_updated = now()
-        // where email = ?;
-        // """;
-
         // For Admin to get category
         public static final String SQL_GET_ALL_CATEGORY = """
                         select * from category
@@ -128,14 +123,6 @@ public class Queries {
                            value
                            (?, ?, ?, ?, ?, ?, ?, ?);
                            """;
-
-        // public static final String SQL_INSERT_TO_BILL_TABLE = """
-        // insert into bill
-        // (uuid, name, email, contact_number, payment_method,
-        // total_amount, product_details, created_by, created_on)
-        // value
-        // (?, ?, ?, ?, ?, ?, ?, ?, now());
-        // """;
 
         // For Admin to get all bills
         public static final String SQL_GET_ALL_BILL = """

@@ -75,14 +75,14 @@ export class SignupComponent implements OnInit {
       password: formData.password,
     };
 
-    console.log(data);
+    // console.log(data);
 
     // using observable
     this.userSvc
       .signup(data)
       .pipe(
         tap((response: any) => {
-          console.log(response);
+          // console.log(response);
 
           this.ngxSvc.stop();
           this.dialogRef.close();
@@ -106,30 +106,5 @@ export class SignupComponent implements OnInit {
       )
       .subscribe();
 
-    // // using promise
-    // this.userSvc
-    //   .signup(data)
-    //   .then((response: any) => {
-    //     console.log(response);
-
-    //     this.ngxSvc.stop();
-    //     this.dialogRef.close();
-    //     this.responseMessage = response?.message;
-    //     // this.responseMessage = response.body
-    //     this.snackbarSvc.openSnckBar(this.responseMessage, '');
-    //     this.router.navigate(['/']);
-    //   })
-    //   .catch((error) => {
-    //     this.ngxSvc.stop();
-    //     if (error.error?.message) {
-    //       this.responseMessage = error.error?.message;
-    //     } else {
-    //       this.responseMessage = GlobalConstants.genericError;
-    //     }
-    //     this.snackbarSvc.openSnckBar(
-    //       this.responseMessage,
-    //       GlobalConstants.error
-    //     );
-    //   });
   }
 }

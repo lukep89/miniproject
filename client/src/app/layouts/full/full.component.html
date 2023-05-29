@@ -1,19 +1,15 @@
 <div class="main-container">
   <mat-toolbar color="primary" class="topbar telative">
-    <div class="navbar-header">
+    <div class="navbar-header" fxLayout="row" fxLayoutAlign="start center">
       <button
         mat-icon-button
         (click)="snav.toggle()"
         value="sidebarclosed"
         style="vertical-align: bottom"
       >
-        <mat-icon>view_sidebar</mat-icon></button
-      ><b>
-        <span style="vertical-align: middle">
-          <mat-icon>storefront</mat-icon>
-        </span>
-      </b>
-      <span fxShow="false" fxShow.gt-xs>Cafe Management System </span>
+        <mat-icon>view_sidebar</mat-icon></button>
+          <mat-icon fxShow="false" fxShow.gt-xs>storefront</mat-icon>
+      <span fxShow="false" fxShow.gt-xs> Cafe Management System </span>
     </div>
     <span fxFlex></span>
 

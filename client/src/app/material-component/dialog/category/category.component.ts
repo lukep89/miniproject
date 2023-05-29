@@ -34,7 +34,7 @@ export class CategoryComponent implements OnInit {
     this.categoryForm = this.createForm();
 
     if (this.dialogData.action === 'Edit') {
-      console.log(this.dialogData);
+      // console.log(this.dialogData);
 
       this.dialogAction = 'Edit';
       this.action = 'Update';
@@ -62,13 +62,13 @@ export class CategoryComponent implements OnInit {
       name: formData.name,
     };
 
-    console.log(data);
+    // console.log(data);
 
     this.categorySvc
       .addCategory(data)
       .pipe(
         tap((response: any) => {
-          console.log(response);
+          // console.log(response);
 
           this.dialogRef.close();
 
@@ -78,7 +78,7 @@ export class CategoryComponent implements OnInit {
           this.snackbarSvc.openSnckBar(this.responseMessage, 'success');
         }),
         catchError((error) => {
-          console.log(error);
+          // console.log(error);
 
           this.dialogRef.close();
           if (error.error?.message) {
@@ -103,13 +103,13 @@ export class CategoryComponent implements OnInit {
       name: formData.name,
     };
 
-    console.log(data);
+    // console.log(data);
 
     this.categorySvc
       .updateCategory(data)
       .pipe(
         tap((response: any) => {
-          console.log(response);
+          // console.log(response);
 
           this.dialogRef.close();
 
@@ -119,7 +119,7 @@ export class CategoryComponent implements OnInit {
           this.snackbarSvc.openSnckBar(this.responseMessage, '');
         }),
         catchError((error) => {
-          console.log(error);
+          // console.log(error);
 
           this.dialogRef.close();
           if (error.error?.message) {

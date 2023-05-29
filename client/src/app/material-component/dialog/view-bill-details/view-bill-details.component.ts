@@ -26,7 +26,7 @@ export class ViewBillDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.data = this.dialogData.data;
-    console.log(this.data);
+    // console.log(this.data);
 
     this.dataSource = JSON.parse(this.dialogData.data.productDetails);
   }

@@ -69,7 +69,7 @@ export class ChangePasswordComponent implements OnInit {
       .changePassword(data)
       .pipe(
         tap((response: any) => {
-          console.log(response);
+          // console.log(response);
 
           this.ngxSvc.stop();
           this.responseMessage = response?.message;
@@ -77,7 +77,7 @@ export class ChangePasswordComponent implements OnInit {
           this.snackbarSvc.openSnckBar(this.responseMessage, '');
         }),
         catchError((error) => {
-          console.log(error);
+          // console.log(error);
 
           this.ngxSvc.stop();
           if (error.error?.message) {

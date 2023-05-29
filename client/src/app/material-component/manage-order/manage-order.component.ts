@@ -83,7 +83,7 @@ export class ManageOrderComponent implements OnInit {
       .getFilteredCategoryList()
       .pipe(
         tap((response: any) => {
-          console.log(response);
+          // console.log(response);
 
           this.ngxSvc.stop();
           this.categorysArr = response;
@@ -91,7 +91,7 @@ export class ManageOrderComponent implements OnInit {
         catchError((error: any) => {
           this.ngxSvc.stop();
 
-          console.log(error);
+          // console.log(error);
 
           if (error.error?.message) {
             this.responseMessage = error.error?.message;
@@ -110,13 +110,13 @@ export class ManageOrderComponent implements OnInit {
 
   // get product list by category
   getProductListByCategory(value: any) {
-    console.log(value);
+    // console.log(value);
 
     this.productSvc
       .getProductListByCategory(value.id)
       .pipe(
         tap((response: any) => {
-          console.log(response);
+          // console.log(response);
 
           this.productsArr = response;
 
@@ -125,7 +125,7 @@ export class ManageOrderComponent implements OnInit {
           this.manageOrderForm.controls['total'].setValue(0);
         }),
         catchError((error: any) => {
-          console.log(error);
+          // console.log(error);
 
           if (error.error?.message) {
             this.responseMessage = error.error?.message;
@@ -144,13 +144,13 @@ export class ManageOrderComponent implements OnInit {
 
   // get a product details
   getProductDetails(value: any) {
-    console.log(value);
+    // console.log(value);
 
     this.productSvc
       .getProductById(value.id)
       .pipe(
         tap((response: any) => {
-          console.log(response);
+          // console.log(response);
 
           this.price = response.price;
 
@@ -159,7 +159,7 @@ export class ManageOrderComponent implements OnInit {
           this.manageOrderForm.controls['total'].setValue(this.price * 1);
         }),
         catchError((error: any) => {
-          console.log(error);
+          // console.log(error);
 
           if (error.error?.message) {
             this.responseMessage = error.error?.message;
@@ -223,44 +223,60 @@ export class ManageOrderComponent implements OnInit {
   add() {
     var formData = this.manageOrderForm.value;
 
-    // to check no duplicate when add product
-    var productName = this.dataSource.find(
+    var existingProduct = this.dataSource.find(
       (element: { id: number }) => element.id === formData.product.id
     );
 
-    if (productName == undefined) {
-      this.totalAmount = Number((this.totalAmount + formData.total).toFixed(2));
-
-      console.log(this.totalAmount);
-
+    if (existingProduct) {
+      // Product with the same ID already exists, update the quantity
+      this.totalAmount -= Number(existingProduct.total);
+      existingProduct.quantity = formData.quantity;
+      existingProduct.total = (formData.quantity * formData.price).toFixed(2);
+      this.totalAmount += Number(existingProduct.total);
+    } else {
+      // Product does not exist, add it to the data source
       this.dataSource.push({
         id: formData.product.id,
         name: formData.product.name,
         category: formData.category.name,
         quantity: formData.quantity,
         price: formData.price.toFixed(2),
-        total: formData.total.toFixed(2),
+        total: (formData.quantity * formData.price).toFixed(2),
       });
 
-      this.dataSource = [...this.dataSource];
-
-      this.snackbarSvc.openSnckBar(
-        GlobalConstants.productAddedMessage,
-        'success'
-      );
-    } else {
-      this.snackbarSvc.openSnckBar(
-        GlobalConstants.productExistMessage,
-        GlobalConstants.error
-      );
+      this.totalAmount += formData.quantity * formData.price;
     }
+
+    this.totalAmount = Number(this.totalAmount.toFixed(2));
+
+    this.dataSource = [...this.dataSource];
+
+    this.snackbarSvc.openSnckBar(
+      GlobalConstants.productAddedMessage,
+      'success'
+    );
   }
 
   handleDeleteAction(value: any, element: any) {
-    this.totalAmount = this.totalAmount - element.total;
+    this.totalAmount -= Number(element.total);
 
     this.dataSource.splice(value, 1);
     this.dataSource = [...this.dataSource];
+  }
+
+  handleEditProduct(row: any) {
+    this.manageOrderForm.patchValue({
+      product: {
+        id: row.id,
+        name: row.name,
+      },
+      category: {
+        name: row.category,
+      },
+      quantity: row.quantity,
+      price: row.price.toString(),
+      total: (row.quantity * row.price).toFixed(2),
+    });
   }
 
   submitAction() {
@@ -275,14 +291,14 @@ export class ManageOrderComponent implements OnInit {
       productDetails: JSON.stringify(this.dataSource),
     };
 
-    console.log(data);
+    // console.log(data);
 
     this.ngxSvc.start();
     this.billSvc
       .generateReport(data)
       .pipe(
         tap((response: any) => {
-          console.log(response);
+          // console.log(response);
 
           this.downloadFile(response?.uuid);
 
@@ -293,7 +309,7 @@ export class ManageOrderComponent implements OnInit {
         catchError((error: any) => {
           this.ngxSvc.stop();
 
-          console.log(error);
+          // console.log(error);
 
           if (error.error?.message) {
             this.responseMessage = error.error?.message;
@@ -311,7 +327,6 @@ export class ManageOrderComponent implements OnInit {
   }
 
   downloadFile(filename: string) {
-    console.log(filename);
     var data = {
       uuid: filename,
     };
@@ -320,7 +335,7 @@ export class ManageOrderComponent implements OnInit {
       .getPdf(data)
       .pipe(
         tap((response: any) => {
-          console.log(response);
+          // console.log(response);
 
           saveAs(response, filename + '.pdf');
           this.ngxSvc.stop();

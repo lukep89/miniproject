@@ -8,7 +8,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CdkTableModule } from '@angular/cdk/table';
 import { MaterialComponentRoutes } from './material-component.routing';
 import { ConfirmationComponent } from './dialog/confirmation/confirmation.component';
-import { ViewBillDetailsComponent} from './dialog/view-bill-details/view-bill-details.component';
+import { ViewBillDetailsComponent } from './dialog/view-bill-details/view-bill-details.component';
 import { ChangePasswordComponent } from './dialog/change-password/change-password.component';
 import { ManageCategoryComponent } from './manage-category/manage-category.component';
 import { CategoryComponent } from './dialog/category/category.component';
@@ -17,6 +17,7 @@ import { ProductComponent } from './dialog/product/product.component';
 import { ManageOrderComponent } from './manage-order/manage-order.component';
 import { ViewBillComponent } from './view-bill/view-bill.component';
 import { ManageUserComponent } from './manage-user/manage-user.component';
+
 
 @NgModule({
   imports: [

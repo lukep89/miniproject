@@ -12,7 +12,6 @@ import { ConfirmationComponent } from '../dialog/confirmation/confirmation.compo
 
 import { saveAs } from 'file-saver';
 
-
 @Component({
   selector: 'app-view-bill',
   templateUrl: './view-bill.component.html',
@@ -56,11 +55,11 @@ export class ViewBillComponent implements OnInit {
 
           this.ngxSvc.stop();
           this.dataSource = new MatTableDataSource(response);
-          console.log(this.dataSource);
+          // console.log(this.dataSource);
         }),
         catchError((error: any) => {
           this.ngxSvc.stop();
-          console.log(error.error?.message);
+          // console.log(error.error?.message);
 
           if (error.error?.message) {
             this.responseMessage = error.error?.message;
@@ -124,7 +123,7 @@ export class ViewBillComponent implements OnInit {
       .deleteBill(id)
       .pipe(
         tap((response: any) => {
-          console.log(response);
+          // console.log(response);
 
           this.ngxSvc.stop();
           this.tableData();
@@ -133,7 +132,7 @@ export class ViewBillComponent implements OnInit {
         }),
         catchError((error: any) => {
           this.ngxSvc.stop();
-          console.log(error);
+          // console.log(error);
 
           if (error.error?.message) {
             this.responseMessage = error.error?.message;
@@ -171,7 +170,7 @@ export class ViewBillComponent implements OnInit {
       .getPdf(data)
       .pipe(
         tap((response: any) => {
-          console.log(response);
+          // console.log(response);
 
           saveAs(response, filename + '.pdf');
           this.ngxSvc.stop();
@@ -179,7 +178,7 @@ export class ViewBillComponent implements OnInit {
         catchError((error: any) => {
           this.ngxSvc.stop();
 
-          console.log(error);
+          // console.log(error);
 
           if (error.error?.message) {
             this.responseMessage = error.error?.message;

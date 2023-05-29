@@ -20,15 +20,6 @@ export class UserService {
     });
   }
 
-  // // using promise
-  // signup(data: any): Promise<any> {
-  //   const headers = new HttpHeaders().set('Content-Type', 'application/json');
-
-  //   return lastValueFrom(
-  //     this.http.post(this.url + '/api/user/signup', data, { headers: headers })
-  //   );
-  // }
-
   forgotPassword(data: any) {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
 
@@ -70,7 +61,7 @@ export class UserService {
   }
 
   resetPassword(data: any, paramValue: String) {
-    console.log(data, paramValue);
+   
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
 
     return this.http.put(

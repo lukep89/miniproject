@@ -23,6 +23,8 @@ import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 
+import com.mongodb.client.result.DeleteResult;
+
 import ibf2022.batch1.project.server.model.Bill;
 import ibf2022.batch1.project.server.utils.MongoUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -104,6 +106,7 @@ public class BillRepository {
         return jdbcTemplate.queryForObject(SQL_COUNT_BILL, Integer.class);
     }
 
+    // MONGO PART
     public static String COLLECTION_PDF_BILL = "pdf_bill";
 
     public int savePdf(byte[] pdfBytes, String fileName) {
@@ -122,7 +125,6 @@ public class BillRepository {
     public Optional<byte[]> getPdfDocument(String fileName) {
         log.info(">>>>> Inside BillRepo - getPdfDocument - fileName {} ", fileName);
 
-
         Query billIdQuery = new Query()
                 .addCriteria(Criteria.where("bill").is(fileName));
 
@@ -134,6 +136,19 @@ public class BillRepository {
         byte[] result = MongoUtils.getPdfByte(docs.get(0));
         return Optional.of(result);
 
+    }
+
+    public int deletePdf(String fileName) {
+        Query query = Query.query(Criteria.where("bill").is(fileName));
+        DeleteResult result = mongoTemplate.remove(query, COLLECTION_PDF_BILL);
+
+        if (result.getDeletedCount() > 0) {
+            log.info(">>>> Record deleted successfully.");
+            return 1;
+        } else {
+            log.info(">>>> Record not found.");
+            return 0;
+        }
     }
 
 }

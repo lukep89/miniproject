@@ -16,6 +16,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import ibf2022.batch1.project.server.JWT.CustomerUserDetailsService;
 import ibf2022.batch1.project.server.JWT.JwtFilter;
 import ibf2022.batch1.project.server.JWT.JwtUtil;
@@ -106,7 +109,7 @@ public class UserService {
         user.setName(obj.getString("name"));
         user.setContactNumber(obj.getString("contactNumber"));
         user.setEmail(obj.getString("email"));
-       
+
         BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
         user.setPassword(bcrypt.encode(obj.getString("password")));
 
@@ -117,7 +120,7 @@ public class UserService {
     }
 
     public ResponseEntity<String> login(String payload) {
-        log.info(">>>> inside login {}", payload);
+        // log.info(">>>> inside login {}", payload);
 
         try {
             JsonObject obj = CafeUtils.jsonStringToJsonObj(payload);
@@ -135,12 +138,15 @@ public class UserService {
                         .equalsIgnoreCase("active")) {
 
                     // generate token and return in resp
-                    return new ResponseEntity<String>("{\"token\":\"" +
-                            jwtUtil.generateToken(
-                                    customerUserDetailsService.getUserDetail().getEmail(),
-                                    customerUserDetailsService.getUserDetail().getRole())
-                            + "\"}",
-                            HttpStatus.OK);
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    ObjectNode responseBody = objectMapper.createObjectNode();
+
+                    responseBody.put("token", jwtUtil.generateToken(
+                            customerUserDetailsService.getUserDetail().getEmail(),
+                            customerUserDetailsService.getUserDetail().getRole()));
+                    responseBody.put("message", customerUserDetailsService.getUserDetail().getName());
+
+                    return new ResponseEntity<>(responseBody.toString(), HttpStatus.OK);
 
                 } else {
                     return new ResponseEntity<String>("{\"message\":\"" +
@@ -222,10 +228,10 @@ public class UserService {
 
         try {
             JsonObject obj = CafeUtils.jsonStringToJsonObj(payload);
-            System.out.println(">>>>> changePassword - payload: " + payload);
+            // System.out.println(">>>>> changePassword - payload: " + payload);
 
             Optional<User> opt = userRepo.findByEmail(jwtFilter.getCurrentUser());
-            log.info(">>>> Inside chaangePassword - jetFiler: {}", jwtFilter.getCurrentUser());
+            // log.info(">>>> Inside chaangePassword - jetFiler: {}", jwtFilter.getCurrentUser());
 
             if (opt.isPresent()) {
 
@@ -256,7 +262,7 @@ public class UserService {
         return CafeUtils.getRespEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong!");
     }
 
-    public ResponseEntity<String> updateResetPasswordToken(String payload) { // WORKING
+    public ResponseEntity<String> updateResetPasswordToken(String payload) {
 
         try {
             JsonObject obj = CafeUtils.jsonStringToJsonObj(payload);
@@ -309,7 +315,7 @@ public class UserService {
                 return CafeUtils.getRespEntity(HttpStatus.OK, "Reset password successfully");
 
             } else {
-                return CafeUtils.getRespEntity(HttpStatus.BAD_REQUEST, "User not found. Password was not reset");
+                return CafeUtils.getRespEntity(HttpStatus.BAD_REQUEST, "Token not found!");
             }
         } catch (Exception e) {
             e.printStackTrace();

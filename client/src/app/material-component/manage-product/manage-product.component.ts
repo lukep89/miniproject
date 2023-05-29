@@ -47,7 +47,7 @@ export class ManageProductComponent implements OnInit {
       .getProducts()
       .pipe(
         tap((response: any) => {
-          console.log(response);
+          // console.log(response);
 
           this.ngxSvc.stop();
           this.dataSource = new MatTableDataSource(response);
@@ -55,7 +55,7 @@ export class ManageProductComponent implements OnInit {
         }),
         catchError((error: any) => {
           this.ngxSvc.stop();
-          console.log(error.error?.message);
+          // console.log(error.error?.message);
 
           if (error.error?.message) {
             this.responseMessage = error.error?.message;
@@ -147,7 +147,7 @@ export class ManageProductComponent implements OnInit {
       .deleteProduct(id)
       .pipe(
         tap((response: any) => {
-          console.log(response);
+          // console.log(response);
 
           this.ngxSvc.stop();
           this.tableData();
@@ -156,7 +156,7 @@ export class ManageProductComponent implements OnInit {
         }),
         catchError((error: any) => {
           this.ngxSvc.stop();
-          console.log(error);
+          // console.log(error);
 
           if (error.error?.message) {
             this.responseMessage = error.error?.message;
@@ -176,7 +176,6 @@ export class ManageProductComponent implements OnInit {
   onChange(status: any, id: any) {
     this.ngxSvc.start();
 
-    console.log(status);
     if (status) {
       status = 'active';
     } else {
@@ -187,13 +186,13 @@ export class ManageProductComponent implements OnInit {
       status: status,
       id: id,
     };
-    console.log(data);
+    // console.log(data);
 
     this.productSvc
       .updateProductStatus(data)
       .pipe(
         tap((response: any) => {
-          console.log(response);
+          // console.log(response);
 
           this.ngxSvc.stop();
           this.responseMessage = response?.message;
@@ -201,7 +200,7 @@ export class ManageProductComponent implements OnInit {
         }),
         catchError((error: any) => {
           this.ngxSvc.stop();
-          console.log(error);
+          // console.log(error);
 
           if (error.error?.message) {
             this.responseMessage = error.error?.message;

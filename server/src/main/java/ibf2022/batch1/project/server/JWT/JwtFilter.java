@@ -40,14 +40,14 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // if httprequest matches these paths
         if (request.getServletPath()
-                .matches("/api/user/login|/api/user/signup|/api/user/forgotPassword|/api/user/resetPassword")) {
+                .matches("/api/user/login|/api/user/signup|/api/user/forgotPassword|/api/user/resetPassword|/api/user/checkToken")) {
 
             // no token validation required
             filterChain.doFilter(request, response);
 
         } else {
             String authHeader = request.getHeader("Authorization");
-            log.info(">>>> Inside doFilterInternal - authHeader: {}", authHeader);
+            // log.info(">>>> Inside doFilterInternal - authHeader: {}", authHeader);
 
             String token = null;
 
@@ -56,14 +56,14 @@ public class JwtFilter extends OncePerRequestFilter {
                 userName = jwtUtil.extractUsername(token);
                 claims = jwtUtil.extractAllClaims(token);
 
-                log.info(">>>> Inside doFilterInternal - token, userName, claims : {} , {} , {}", token, userName,
-                        claims);
+                // log.info(">>>> Inside doFilterInternal - token, userName, claims : {} , {} , {}", token, userName,
+                //         claims);
             }
 
             if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = customerUserDetailsSvc.loadUserByUsername(userName);
 
-                log.info(">>>> Inside doFilterInternal - userDetails : {}", userDetails);
+                // log.info(">>>> Inside doFilterInternal - userDetails : {}", userDetails);
 
                 if (jwtUtil.validateToken(token, userDetails)) {
 
@@ -75,7 +75,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
                     SecurityContextHolder.getContext().setAuthentication(authToken);
 
-                    log.info(">>>> Inside doFilterInternal - authToken : {}", authToken);
+                    // log.info(">>>> Inside doFilterInternal - authToken : {}", authToken);
                 }
             }
             filterChain.doFilter(request, response);

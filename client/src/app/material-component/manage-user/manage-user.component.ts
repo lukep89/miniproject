@@ -40,7 +40,7 @@ export class ManageUserComponent implements OnInit {
       .getUsers()
       .pipe(
         tap((response: any) => {
-          console.log(response);
+          // console.log(response);
 
           this.ngxSvc.stop();
           this.dataSource = new MatTableDataSource(response);
@@ -48,7 +48,7 @@ export class ManageUserComponent implements OnInit {
         }),
         catchError((error: any) => {
           this.ngxSvc.stop();
-          console.log(error);
+          // console.log(error);
 
           if (error.error?.message) {
             this.responseMessage = error.error?.message;
@@ -72,11 +72,10 @@ export class ManageUserComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  // onChange(status: any, id: any) {
+
   onChange(status: any, email: any) {
     this.ngxSvc.start();
 
-    console.log(status);
     if (status) {
       status = 'active';
     } else {
@@ -88,13 +87,13 @@ export class ManageUserComponent implements OnInit {
       // id: id,
       email: email,
     };
-    console.log(data);
+    // console.log(data);
 
     this.userSvc
       .updateUser(data)
       .pipe(
         tap((response: any) => {
-          console.log(response);
+          // console.log(response);
 
           this.ngxSvc.stop();
           this.responseMessage = response?.message;
@@ -102,7 +101,7 @@ export class ManageUserComponent implements OnInit {
         }),
         catchError((error: any) => {
           this.ngxSvc.stop();
-          console.log(error);
+          // console.log(error);
 
           if (error.error?.message) {
             this.responseMessage = error.error?.message;

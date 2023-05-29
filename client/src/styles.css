@@ -54,14 +54,14 @@ mat-cell {
   padding: 0px 8px 0px 15px !important;
 }
 
-.black-snackbar {
-  --mdc-snackbar-container-color: black;
+.red-snackbar {
+  --mdc-snackbar-container-color: rgb(222, 87, 87);
   --mdc-snackbar-supporting-text-color: white;
   text-align: center;
 }
 
 .green-snackbar {
-  --mdc-snackbar-container-color: #25d07a;
+  --mdc-snackbar-container-color: #22ca76;
   --mdc-snackbar-supporting-text-color: black;
   text-align: center;
 }

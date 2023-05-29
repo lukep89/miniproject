@@ -58,11 +58,12 @@ export class LoginComponent implements OnInit {
       .login(data)
       .pipe(
         tap((response: any) => {
-          console.log(response);
+          // console.log(response);
 
           this.ngxSvc.stop();
           this.dialogRef.close();
           localStorage.setItem('token', response?.token);
+          localStorage.setItem('name', response?.message);
 
           this.router.navigate(['/cafe/dashboard']);
         }),

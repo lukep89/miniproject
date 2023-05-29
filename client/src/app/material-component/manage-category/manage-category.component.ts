@@ -40,14 +40,14 @@ export class ManageCategoryComponent implements OnInit {
       .getCategoryList()
       .pipe(
         tap((response: any) => {
-          console.log(response);
+          // console.log(response);
 
           this.ngxSvc.stop();
           this.dataSource = new MatTableDataSource(response);
         }),
         catchError((error: any) => {
           this.ngxSvc.stop();
-          console.log(error.error?.message);
+          // console.log(error.error?.message);
 
           if (error.error?.message) {
             this.responseMessage = error.error?.message;

@@ -204,6 +204,7 @@ public class BillService {
 
             if (opt.isPresent()) {
                 billRepo.deleteBillById(id);
+                billRepo.deletePdf(opt.get().getUuid());
 
                 return CafeUtils.getRespEntity(HttpStatus.OK, "Deleted bill successfully");
 

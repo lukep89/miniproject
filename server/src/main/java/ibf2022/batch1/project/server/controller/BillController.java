@@ -52,7 +52,7 @@ public class BillController {
 
     @PostMapping(path = "/getPdf")
     ResponseEntity<byte[]> getPdf(@RequestBody String payload) {
-        System.out.println(">>>> Inside BillController - getPdf - payload: " + payload);
+        // System.out.println(">>>> Inside BillController - getPdf - payload: " + payload);
 
         try {
             

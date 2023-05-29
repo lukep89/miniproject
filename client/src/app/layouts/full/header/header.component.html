@@ -1,6 +1,10 @@
-<button [matMenuTriggerFor]="profile" mat-icon-button class="m-r-5">
-  <mat-icon>account_circle</mat-icon>
-</button>
+<div fxLayout="row" fxLayoutAlign="start center">
+  <span fxShow="true" fxShow.gt-xs>Hello, {{ name }}</span>
+  <button [matMenuTriggerFor]="profile" mat-icon-button class="m-r-5">
+    <mat-icon>account_circle</mat-icon>
+  </button>
+</div>
+
 <mat-menu #profile="matMenu" class="mymegamenu">
   <button mat-menu-item (click)="changePassword()">
     <mat-icon>password</mat-icon>Change password

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ChangePasswordComponent } from 'src/app/material-component/dialog/change-password/change-password.component';
@@ -9,10 +9,15 @@ import { ConfirmationComponent } from 'src/app/material-component/dialog/confirm
   templateUrl: './header.component.html',
   styleUrls: [],
 })
-export class HeaderComponent {
-  role: any;
+export class HeaderComponent implements OnInit {
+ 
+  name: any;
 
   constructor(private router: Router, private dialog: MatDialog) {}
+
+  ngOnInit(): void {
+      this.name = localStorage.getItem('name');
+  }
 
   logout() {
     const dialogConfig = new MatDialogConfig();

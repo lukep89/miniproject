@@ -84,18 +84,18 @@ export class ResetPasswordComponent implements OnInit {
     const sub = dialogRef.componentInstance.onEmitStatusChange.subscribe(
       (resposne) => {
         this.ngxSvc.start();
-        this.resetPassword(data, this.token);
+        this.resettingPassword(data, this.token);
         dialogRef.close();
       }
     );
   }
 
-  resetPassword(data: any, token: string) {
+  resettingPassword(data: any, token: string) {
     this.userSvc
       .resetPassword(data, this.token)
       .pipe(
         tap((response: any) => {
-          console.log(response);
+          // console.log(response);
 
           this.ngxSvc.stop();
           this.responseMessage = response?.message;
@@ -104,7 +104,7 @@ export class ResetPasswordComponent implements OnInit {
           this.router.navigate(['/']);
         }),
         catchError((error) => {
-          console.log(error);
+          // console.log(error);
 
           this.ngxSvc.stop();
           if (error.error?.message) {

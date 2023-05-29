@@ -62,16 +62,6 @@ public class JwtUtil {
         return createToken(claims, username);
     }
 
-    // TODO: IF want to add name in token. then use at frontend beside the profile
-    // circle at header
-    // public String generateToken(String username, String role, String name) {
-    // Map<String, Object> claims = new HashMap<>();
-    // claims.put("role", role);
-    // claims.put("name", name);
-
-    // return createToken(claims, username);
-    // }
-
     private String createToken(Map<String, Object> claims, String username) {
         log.info(">>>> Inside createToken - claims & username: {} : {} ", claims, username);
 

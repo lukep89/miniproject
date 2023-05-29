@@ -6,7 +6,7 @@ import {
   HttpInterceptor,
   HttpErrorResponse,
 } from '@angular/common/http';
-import { Observable, catchError, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 
 // interceptor to modify the token
@@ -19,6 +19,21 @@ export class TokenInterceptorInterceptor implements HttpInterceptor {
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
+    // console.log(request.url)
+
+    if (
+      (request.url.indexOf('/api/user/login') !== -1 &&
+        request.method.indexOf('GET') !== -1) ||
+      (request.url.indexOf('/api/user/checkToken') !== -1 &&
+        request.method.indexOf('GET') !== -1) ||
+      (request.url.indexOf('/api/user/resetPassword') !== -1 &&
+        request.method.indexOf('GET') !== -1) ||
+      (request.url.indexOf('/resetPassword') !== -1 &&
+        request.method.indexOf('GET') !== -1)
+    ) {
+      return next.handle(request);
+    }
+
     const token = localStorage.getItem('token');
 
     if (token) {
@@ -30,7 +45,7 @@ export class TokenInterceptorInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError((error) => {
         if (error instanceof HttpErrorResponse) {
-          console.log(error.url);
+          // console.log(error.url);
 
           if (error.status === 401 || error.status === 403) {
             if (this.router.url === '/') {

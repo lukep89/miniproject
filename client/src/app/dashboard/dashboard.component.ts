@@ -20,8 +20,7 @@ export class DashboardComponent implements AfterViewInit {
     private snackbarSvc: SnackbarService,
     private ngxSvc: NgxUiLoaderService
   ) {
-    // this.ngxSvc.start();
-    ngxSvc.start();
+    this.ngxSvc.start();
     this.dashboardData();
   }
 
@@ -30,14 +29,14 @@ export class DashboardComponent implements AfterViewInit {
       .getCount()
       .pipe(
         tap((response: any) => {
-          console.log(response);
+          // console.log(response);
 
           this.ngxSvc.stop();
           this.data = response;
         }),
         catchError((error: any) => {
           this.ngxSvc.stop();
-          console.log(error);
+          // console.log(error);
 
           if (error.error?.message) {
             this.responseMessage = error.error?.message;
@@ -54,30 +53,6 @@ export class DashboardComponent implements AfterViewInit {
       .subscribe();
   }
 
-  // dashboardData() {
-  //   this.dashboardSvc
-  //     .getDetails()
-  //     .then((response) => {
-  //       console.log(response);
-
-  //       this.ngxSvc.stop();
-  //       this.data = response;
-  //     })
-  //     .catch((error) =>{
-  //       this.ngxSvc.stop();
-  //             console.log(error);
-
-  //             if (error.error?.message) {
-  //               this.responseMessage = error.error?.message;
-  //             } else {
-  //               this.responseMessage = GlobalConstants.genericError;
-  //             }
-  //             this.snackbarSvc.openSnckBar(
-  //               this.responseMessage,
-  //               GlobalConstants.error
-  //             );
-  //     });
-  // }
 
   ngAfterViewInit(): void {}
 }

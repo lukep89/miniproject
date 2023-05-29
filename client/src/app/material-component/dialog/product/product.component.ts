@@ -39,7 +39,7 @@ export class ProductComponent implements OnInit {
     this.productForm = this.createForm();
 
     if (this.dialogData.action === 'Edit') {
-      console.log(this.dialogData);
+      // console.log(this.dialogData);
 
       this.dialogAction = 'Edit';
       this.action = 'Update';
@@ -69,7 +69,7 @@ export class ProductComponent implements OnInit {
           this.categoryArr = response;
         }),
         catchError((error: any) => {
-          console.log(error);
+          // console.log(error);
 
           if (error.error?.message) {
             this.responseMessage = error.error?.message;
@@ -102,13 +102,13 @@ export class ProductComponent implements OnInit {
       price: formData.price,
       categoryId: formData.categoryId,
     };
-    console.log(data);
+    // console.log(data);
 
     this.productSvc
       .addProduct(data)
       .pipe(
         tap((response: any) => {
-          console.log(response);
+          // console.log(response);
 
           this.dialogRef.close();
 
@@ -118,7 +118,7 @@ export class ProductComponent implements OnInit {
           this.snackbarSvc.openSnckBar(this.responseMessage, '');
         }),
         catchError((error: any) => {
-          console.log(error);
+          // console.log(error);
 
           if (error.error?.message) {
             this.responseMessage = error.error?.message;
@@ -150,7 +150,7 @@ export class ProductComponent implements OnInit {
       .updateProduct(data)
       .pipe(
         tap((response: any) => {
-          console.log(response);
+          // console.log(response);
 
           this.dialogRef.close();
 
@@ -160,7 +160,7 @@ export class ProductComponent implements OnInit {
           this.snackbarSvc.openSnckBar(this.responseMessage, '');
         }),
         catchError((error: any) => {
-          console.log(error);
+          // console.log(error);
 
           if (error.error?.message) {
             this.responseMessage = error.error?.message;
