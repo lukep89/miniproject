@@ -41,12 +41,11 @@ public class SecurityConfig {
                 .disable()
                 .authorizeHttpRequests()
                 .requestMatchers(
-                        "/api/user/**",
-                        // "/api/user/login",
-                        // "/api/user/signup",
-                        // "/api/user/forgotPassword",
-                        // "/api/user/resetPassword",
-                        // "/api/user/checkToken",
+                        "/api/user/login",
+                        "/api/user/signup",
+                        "/api/user/forgotPassword",
+                        "/api/user/resetPassword",
+                        "/api/user/checkToken",
                         "/",
                         "/index.html",
                         "/**",
