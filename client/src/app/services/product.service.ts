@@ -32,7 +32,7 @@ export class ProductService {
   updateProductStatus(data: any) {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
 
-    return this.http.put('/apiproduct/updateStatus', data, {
+    return this.http.put('/api/product/updateStatus', data, {
       headers: headers,
     });
   }

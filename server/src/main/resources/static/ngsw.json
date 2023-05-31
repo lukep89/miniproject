@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1685385138469,
+  "timestamp": 1685523777082,
   "index": "/index.html",
   "assetGroups": [
     {
@@ -12,13 +12,13 @@
       },
       "urls": [
         "/366.d57dc28460c47185.js",
-        "/761.46619e48b6a3b548.js",
+        "/761.0bc9a2cba1688860.js",
         "/favicon.ico",
         "/index.html",
         "/main.f88a9e710a1b4bc1.js",
         "/manifest.webmanifest",
         "/polyfills.9235a755e281251e.js",
-        "/runtime.a858b59e81044456.js",
+        "/runtime.5a2f59a88165bd31.js",
         "/styles.f6dd9812550b92fd.css"
       ],
       "patterns": []
@@ -56,7 +56,7 @@
   "dataGroups": [],
   "hashTable": {
     "/366.d57dc28460c47185.js": "fefe875dd251b204cda434de7f09c1689d8603e8",
-    "/761.46619e48b6a3b548.js": "99d4a66cba7e40a83adbd1f83f15e38a88769688",
+    "/761.0bc9a2cba1688860.js": "dacc9b2d634618d937d62811f2bd7faec1a8d1c0",
     "/assets/icons/icon-128x128.png": "dae3b6ed49bdaf4327b92531d4b5b4a5d30c7532",
     "/assets/icons/icon-144x144.png": "b0bd89982e08f9bd2b642928f5391915b74799a7",
     "/assets/icons/icon-152x152.png": "7479a9477815dfd9668d60f8b3b2fba709b91310",
@@ -76,11 +76,11 @@
     "/assets/images/Cafe Mgmt App_files/vendor.js": "9eeecb93004cab82025cfd5282ff6d3ced3faec4",
     "/assets/images/homeBanner.jpeg": "cc8c13f2cea15d6ccfe99253dd6049525c0973be",
     "/favicon.ico": "22f6a4a3bcaafafb0254e0f2fa4ceb89e505e8b2",
-    "/index.html": "b5722a7bc5d32431159293a6bc1bdadbfd08677b",
+    "/index.html": "17d83a9f04014dfed57a2dbf09fb35c0f46ca36b",
     "/main.f88a9e710a1b4bc1.js": "56efa27b461c1def951be09c89595f136bf9a72a",
     "/manifest.webmanifest": "6bd446cf481e91dc7da6926e0d9b5fb2029c63fa",
     "/polyfills.9235a755e281251e.js": "dc2040972c96a1161a07b121b72b16eb4e750032",
-    "/runtime.a858b59e81044456.js": "595cc355316a313e6d2d223a67d8eea3f2e33917",
+    "/runtime.5a2f59a88165bd31.js": "de06e615e911c8cb9358257e828eb492e8f62a87",
     "/styles.f6dd9812550b92fd.css": "157145baf9b2f1e1863eed5b3a56192a5ec949f5"
   },
   "navigationUrls": [
